@@ -6,5 +6,5 @@ app.listen(3001,()=>{
 });
 
 app.get('/',(req,res)=>{
-  res.send("<h1>hello in expressJS</h1>");
-})
+  res.sendFile(path.join(__dirname, '/index.html'));
+});
