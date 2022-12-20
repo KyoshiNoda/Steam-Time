@@ -1,9 +1,9 @@
 import React from 'react'
-
+import Countdown from '../components/Countdown'
 function Homepage() {
   return (
-    <div> 
-      Homepage
+    <div className='flex justify-center'> 
+      <Countdown/>
     </div>
   )
 }
