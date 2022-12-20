@@ -1,21 +1,22 @@
 import socket
 import threading
 import sys
+import steam
 
 from _thread import *
 
 
 lock = threading.Lock()
 
-def server_listener(c):
+def server_listener(client):
     while True:
-        data = c.recv(1024)
+        data = client.recv(1024)
         if not data:
             print('Bye')
             lock.release()
             break
-        c.send(data)
-    c.close()
+        client.send(data)
+    client.close()
 
 def main():
     host = ""
@@ -33,11 +34,11 @@ def main():
     print("socket is listening")
 
     while True:
-        c, addr = s.accept()
+        client, addr = s.accept()
         lock.acquire()
         print("Connected to :{} :{}", addr[0], addr[1])
 
-        start_new_thread(server_listener, (c))
+        start_new_thread(server_listener, (client))
     s.close()
 
 if __name__ == '__main__':
