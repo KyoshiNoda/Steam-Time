@@ -6,7 +6,6 @@ function Homepage() {
   return (
     <Background>
       <NavBar/>
-      homepage
       <Main/>
     </Background>
 
