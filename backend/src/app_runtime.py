@@ -20,6 +20,7 @@
 
 import time
 import psutil
+
 def findProcessIdByName(processName):
     # Here is the list of all the PIDs of a all the running process 
     # whose name contains the given string processName
@@ -31,7 +32,7 @@ def findProcessIdByName(processName):
            # Checking if process name contains the given name string.
            if processName.lower() in pinfo['name'].lower() :
                listOfProcessObjects.append(pinfo)
-       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
+       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
            pass
     return listOfProcessObjects;
 # Finding PIDs od all the running instances of process 
@@ -46,5 +47,7 @@ if len(listOfProcessIds) > 0:
        print((processID ,processName,processCreationTime ))
 else :
    print('No Running Process found with this text')
+
+
 
 
