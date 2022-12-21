@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-daisyui'
 import Card from './Card'
 function Main() {
   return (
@@ -11,7 +12,7 @@ function Main() {
             Tracks their gaming session and provide health statistics.<br/>
             Cultivates a healthy game/break ratio and attempts to prevent the user from playing videogames too long <br/>
           </div>
-          <button className ="btn btn-primary">Get Started</button>
+            <Button color="primary">View More</Button>
         </div>
       </div>
     </div>

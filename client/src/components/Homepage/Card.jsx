@@ -10,7 +10,7 @@ function Card() {
     };
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl">
-        <figure><img className = 'w-full' src= {user.image}/></figure>
+        <figure><img className = 'w-full' src= {user.image} alt = 'steamLogo'/></figure>
         <div className="card-body p-5 m-5 font-semibold">
             <h1 className="card-title justify-center text-3xl">{user.name}</h1>
             <h2>Games Owned: {user.totalGames}</h2>
