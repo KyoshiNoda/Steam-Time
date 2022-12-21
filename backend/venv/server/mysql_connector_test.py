@@ -8,17 +8,18 @@ mydb = mysql.connector.connect(
     password="root",
     host="127.0.0.1",
     port="3306",
-    database="sakilav2221"
+    database="steam_user"
 )
 
 cursor = mydb.cursor()
 
-query = ("SELECT filmID, title, description FROM film")
+sql = """INSERT INTO owned_games (appID, name, playtimeForever) VALUES ({}, "{}", {})""".format(122, 'new game', 192)
 
-cursor.execute(query)
 
-for (filmID, title, description) in cursor:
-    print("{}\t | {}\t | {}\t".format(filmID, title, description))
+cursor.execute(sql)
+mydb.commit()
+
+print(cursor.rowcount, "record inserted")
 
 cursor.close()
 mydb.close()
