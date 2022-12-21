@@ -11,8 +11,8 @@ steamid = "76561198871279330"
 
 app_list = requests.get("https://api.steampowered.com/ISteamApps/GetAppList/v2")
 app_list_data = json.loads(app_list.text)
-# for x in app_list_data['applist']['apps']:
-#     if x == 41:
-#         print(app_list_data['applist']['apps'][x])
-#         break
-print(app_list_data['applist']['apps'][41])
+for x in app_list_data['applist']['apps']:
+    if x == 41:
+        print(app_list_data['applist']['apps'][x])
+        break
+# print(app_list_data['applist']['apps'][41])
