@@ -1,6 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
 
 function TimeForm() {
+  const [hours,setHours] = useState();
+  const [mins, setMins] = useState();
+
+  const hoursHandler = (event)=>{
+    setHours(event.target.value);
+    console.log(hours);
+  }
+
+  const minsHandler = (event) =>{
+    setMins(event.target.value);
+    console.log(mins);
+  }
+
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center gap-10">
@@ -10,6 +24,7 @@ function TimeForm() {
           </label>
           <input
             type="number"
+            onChange={hoursHandler}
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs"
           />
@@ -21,6 +36,7 @@ function TimeForm() {
           </label>
           <input
             type="number"
+            onChange={minsHandler}
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs"
           />
