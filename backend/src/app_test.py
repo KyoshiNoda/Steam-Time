@@ -1,10 +1,9 @@
 from flask import Flask
-app = Flask(__name__)
+from flask_cors import CORS
 import steam_query_class
-
+app = Flask(__name__)
+CORS(app)
 query_object = steam_query_class.Steam_WebAPI_Query(76561198871279330)
-
-
 @app.route("/profile", methods=['GET'])
 def profile():
     return query_object.get_profile()
