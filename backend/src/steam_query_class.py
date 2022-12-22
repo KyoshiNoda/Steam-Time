@@ -44,13 +44,13 @@ class Steam_WebAPI_Query:
 
 def test():
     query = Steam_WebAPI_Query('76561198871279330')
-    print(query.get_owned_games())
-    print(query.get_total_playtime(824270))
-    print(query.appid_converter(1591520))
-    print(query.name_to_steamid_converter("Dilian1"))
-    print(query.get_profile())
-    print(query.query("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"))
-    print(query.get_app_img_url(1938090))
+    # print(query.get_owned_games())
+    # print(query.get_total_playtime(824270))
+    print(query.appid_converter(714010))
+    # print(query.name_to_steamid_converter("Dilian1"))
+    # print(query.get_profile())
+    # print(query.query("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"))
+    # print(query.get_app_img_url(1938090))
 
 if __name__ == '__main__':
     test()

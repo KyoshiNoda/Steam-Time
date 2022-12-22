@@ -1,53 +1,38 @@
-# import psutil
-# import time
-
-
-# process_time={}
-# timestamp = {}
-# # while True:
-# #     current_app = psutil.Process(13980)
-# #     timestamp[current_app] = int(time.time())
-# #     time.sleep(1)
-# #     if current_app not in process_time.keys():
-# #         process_time[current_app] = 0
-# #     process_time[current_app] = process_time[current_app]+int(time.time())-timestamp[current_app]
-# #     print(process_time)
-
-# current_app = psutil.Process(13980)
-# print(current_app.)
-# # timestamp[current_app] = int(time.time())
-# # print(timestamp)
-
+import requests
+import json
 import time
-import psutil
 
-def findProcessIdByName(processName):
-    # Here is the list of all the PIDs of a all the running process 
-    # whose name contains the given string processName
-    listOfProcessObjects = []
-    #Iterating over the all the running process
-    for proc in psutil.process_iter():
-       try:
-           pinfo = proc.as_dict(attrs=['pid', 'name', 'create_time'])
-           # Checking if process name contains the given name string.
-           if processName.lower() in pinfo['name'].lower() :
-               listOfProcessObjects.append(pinfo)
-       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
-           pass
-    return listOfProcessObjects;
-# Finding PIDs od all the running instances of process 
-# which contains 'chrome' in it's name
-listOfProcessIds = findProcessIdByName('Code')
-if len(listOfProcessIds) > 0:
-   print('Process Exists | PID and other details are')
-   for elem in listOfProcessIds:
-       processID = elem['pid']
-       processName = elem['name']
-       processCreationTime =  time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(elem['create_time']))
-       print((processID ,processName,processCreationTime ))
-else :
-   print('No Running Process found with this text')
+steam_id = 76561198871279330
+api_key = "69165F7C2940B1D23B6A67783A944BAB"
 
+game_tracker = {}
+
+def game_poller():
+    global game_tracker
+
+    while True:
+        response_data = json.loads(requests.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=69165F7C2940B1D23B6A67783A944BAB&steamids=76561198871279330").text)
+        if 'gameextrainfo' in response_data['response']['players'][0]:
+            game_name = response_data['response']['players'][0]['gameextrainfo']
+            if game_name not in game_tracker:
+                game_tracker[game_name] = {"runtime": 0, "gameid": response_data['response']['players'][0]['gameid']}
+            else:
+                game_tracker[game_name]["runtime"] += 1
+        else:
+            print("Sleep 10 seconds")
+            time.sleep(10)
+            print("Wake up")
+            continue
+        time.sleep(1)
+        print(game_tracker)
+
+
+
+def main():
+    game_poller()
+
+if __name__ == '__main__':
+    main()
 
 
 
