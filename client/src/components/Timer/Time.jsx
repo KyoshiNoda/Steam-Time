@@ -16,10 +16,6 @@ function Time() {
   return (
     <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
       <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-        <CountDown className="font-mono text-5xl" value={15} />
-        days
-      </div>
-      <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
         <CountDown className="font-mono text-5xl" value={10} />
         hours
       </div>

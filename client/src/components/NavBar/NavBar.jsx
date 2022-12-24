@@ -18,6 +18,7 @@ function NavBar() {
                   <ul className="p-2 bg-base-100">
                     <li><NavItem title = "Settings" route = "/Settings"/></li>
                     <li><NavItem title = "Sign out" route = "/SignOut"/></li>
+                    <li><NavItem title = "Sign Up" route = "/SignUp"/></li>
                   </ul>
               </li>
             </ul>
