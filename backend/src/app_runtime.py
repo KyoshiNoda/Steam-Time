@@ -1,53 +1,57 @@
-# import psutil
-# import time
-
-
-# process_time={}
-# timestamp = {}
-# # while True:
-# #     current_app = psutil.Process(13980)
-# #     timestamp[current_app] = int(time.time())
-# #     time.sleep(1)
-# #     if current_app not in process_time.keys():
-# #         process_time[current_app] = 0
-# #     process_time[current_app] = process_time[current_app]+int(time.time())-timestamp[current_app]
-# #     print(process_time)
-
-# current_app = psutil.Process(13980)
-# print(current_app.)
-# # timestamp[current_app] = int(time.time())
-# # print(timestamp)
-
+import requests
+import json
 import time
-import psutil
+import threading
 
-def findProcessIdByName(processName):
-    # Here is the list of all the PIDs of a all the running process 
-    # whose name contains the given string processName
-    listOfProcessObjects = []
-    #Iterating over the all the running process
-    for proc in psutil.process_iter():
-       try:
-           pinfo = proc.as_dict(attrs=['pid', 'name', 'create_time'])
-           # Checking if process name contains the given name string.
-           if processName.lower() in pinfo['name'].lower() :
-               listOfProcessObjects.append(pinfo)
-       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess):
-           pass
-    return listOfProcessObjects;
-# Finding PIDs od all the running instances of process 
-# which contains 'chrome' in it's name
-listOfProcessIds = findProcessIdByName('Code')
-if len(listOfProcessIds) > 0:
-   print('Process Exists | PID and other details are')
-   for elem in listOfProcessIds:
-       processID = elem['pid']
-       processName = elem['name']
-       processCreationTime =  time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(elem['create_time']))
-       print((processID ,processName,processCreationTime ))
-else :
-   print('No Running Process found with this text')
+lock = threading.Lock()
 
+steam_id = 76561198871279330
+api_key = "69165F7C2940B1D23B6A67783A944BAB"
+
+time_counter = 0
+
+def game_poller():
+    response_data = json.loads(requests.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=69165F7C2940B1D23B6A67783A944BAB&steamids=76561198871279330").text)
+    if 'gameextrainfo' in response_data['response']['players'][0]:
+        return True
+    return False
+
+def counter():
+    global time_counter
+    start = time.time()
+    while True:
+        if game_poller() == True:
+            lock.acquire()
+            time_counter = int(time.time() - start)
+            lock.release()
+            time.sleep(1)
+            continue
+        else:
+            break
+
+def printer():
+    global time_counter
+    while True:
+        lock.acquire()
+        print(time_counter)
+        lock.release()
+        time.sleep(1)
+
+def main():
+    t1 = threading.Thread(target=counter)
+    t2 = threading.Thread(target=printer)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+
+
+
+
+if __name__ == '__main__':
+    main()
 
 
 
