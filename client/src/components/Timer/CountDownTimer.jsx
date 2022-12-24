@@ -7,6 +7,7 @@ const defaultTime = {
 };
 
 function CountDownTimer(props) {
+    // console.log("time is  " + props.timeMS);
     const [timeLeft, setTimeLeft] = useState(defaultTime);
 
     useEffect(()=>{
@@ -18,7 +19,8 @@ function CountDownTimer(props) {
 
     const updateTimeLeft = (countdown) =>{
        setTimeLeft(getTimeLeftMS(countdown));
-    }
+    //    console.log(timeLeft);
+    };
   return (
     <div className='flex justify-center gap-5 bg-slate-600 p-10 text-white font-bold text-6xl'>
         <div className='h-96 w-96 bg-slate-500 rounded'>

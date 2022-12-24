@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 
 function TimeForm({getTime}) {
-  const [hours,setHours] = useState();
-  const [mins, setMins] = useState();
+  const [hours,setHours] = useState(0);
+  const [mins, setMins] = useState(0);
 
   const formHandler = (event) =>{
     event.preventDefault();

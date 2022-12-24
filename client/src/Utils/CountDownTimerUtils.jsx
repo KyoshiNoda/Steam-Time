@@ -27,4 +27,5 @@ const getMins = (currentTime,timeDayJS) =>{
 }
 const getHours = (currentTime,timeDayJS) =>{
     const hours = timeDayJS.diff(currentTime, 'hours') % 24;
+    return hours;
 }
