@@ -6,7 +6,7 @@ function Timer() {
   return (
     <>
       <NavBar />
-      <CountDownTimer/>
+      <CountDownTimer timeMS = {401410104014010}/>
       <TimeForm/>
     </>
   );
