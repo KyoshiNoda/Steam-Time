@@ -23,6 +23,12 @@ def app_image():
 def name_to_steamid():
     return query_object.steam_id
 
+@app.route("appid-to-appname", method=['POST', 'GET'])
+def appid_to_appname():
+    if request.method == 'POST':
+        appid = request.form['appid']
+        return query_object.appid_to_name_converter(appid)
+
 
 # @app.route("/login", method=['POST', 'GET'])
 # def login():

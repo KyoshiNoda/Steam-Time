@@ -22,14 +22,13 @@ class Steam_WebAPI_Query:
             if response_data['response']['games'][i]['appid'] == appid:
                 return response_data['response']['games'][i]['playtime_forever']
 
-    def appid_converter(self, appid):
+    def appid_to_name_converter(self, appid):
         """
         Returns the steam appid of a game
         """
-        response_data = self.query("https://api.steampowered.com/ISteamApps/GetAppList/v2")
-        for i in range(len(response_data['applist']['apps'])):
-            if response_data['applist']['apps'][i]['appid'] == appid:
-                return response_data['applist']['apps'][i]['name']
+        response_data = json.loads(requests.get(f'https://store.steampowered.com/api/appdetails/?appids={appid}').text)
+        return response_data[f'{appid}']['data']['name']
+
 
     def get_steamid_from_name(self):
         """
@@ -64,11 +63,11 @@ class Steam_WebAPI_Query:
 
 def test():
     query = Steam_WebAPI_Query("Dilian1")
-    print(query.steam_id)
-    # print(query.steam_id())
+    # print(query.steam_id)
+    print(query.appid_to_name_converter(714010))
     # print(query.get_owned_games())
     # print(query.get_total_playtime(824270))
-    # print(query.appid_converter(714010))
+    # print(query.appid_to_name_converter(714010))
     # print(query.name_to_steamid_converter("Dilian1"))
     # print(query.get_profile())
     # print(query.query("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"))
