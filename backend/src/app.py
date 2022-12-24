@@ -1,7 +1,8 @@
 from flask import Flask, request
-app = Flask(__name__)
+from flask_cors import CORS
 import steam_query_class
-
+app = Flask(__name__)
+CORS(app)
 query_object = steam_query_class.Steam_WebAPI_Query("Dilian1")
 
 

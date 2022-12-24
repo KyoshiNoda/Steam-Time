@@ -1,15 +1,19 @@
-import React from "react";
+import React,{useState} from "react";
+import NavBar from '../components/NavBar/NavBar';
+import CountDownTimer from "../components/Timer/CountDownTimer";
 import TimeForm from "../components/Timer/TimeForm";
-import NavBar from "../components/NavBar/NavBar";
-import Time from "../components/Timer/Time";
 function Timer() {
+  const [finalTime,setFinalTime] = useState(0);
+  const timeHandler = (uHours,uMins) =>{
+    const timeMil =(uHours*60*60+uMins*60)*1000;
+    setFinalTime(timeMil);
+    console.log(finalTime); 
+  };
   return (
     <>
-      <NavBar />
-      <div className="flex justify-center items-center h-96 bg-base-300">
-        <Time />
-      </div>
-      <TimeForm/>
+      <NavBar/>
+      <CountDownTimer timeMS = {finalTime}/>
+      <TimeForm getTime = {timeHandler}/>
     </>
   );
 }
