@@ -1,13 +1,12 @@
-import React from 'react'
-import NavBar from '../components/NavBar/NavBar'
+import React from 'react';
+import NavBar from '../components/NavBar/NavBar';
 function Settings() {
   return (
     <>
-      <NavBar/>
+      <NavBar />
       Settings
     </>
-
-  )
+  );
 }
 
-export default Settings
+export default Settings;

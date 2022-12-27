@@ -1,14 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-import NavBar from '../components/NavBar/NavBar'
+import NavBar from '../components/NavBar/NavBar';
 function Statistics() {
   return (
     <>
-      <NavBar/>
+      <NavBar />
       Statistics
     </>
-
-  )
+  );
 }
 
-export default Statistics
+export default Statistics;

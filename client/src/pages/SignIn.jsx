@@ -1,5 +1,5 @@
-import React,{useState} from "react";
-import SignInForm from "../components/SignIn/SignInForm";
+import React, { useState } from 'react';
+import SignInForm from '../components/SignIn/SignInForm';
 function SignIn() {
   return (
     <>
@@ -8,10 +8,11 @@ function SignIn() {
           <div className="text-center lg:text-left">
             <h1 className="text-5xl font-bold">Login now!</h1>
             <p className="py-6">
-              Get access to your steam game playtime and learn more about your gaming habits!
+              Get access to your steam game playtime and learn more about your
+              gaming habits!
             </p>
           </div>
-          <SignInForm/>
+          <SignInForm />
         </div>
       </div>
     </>
