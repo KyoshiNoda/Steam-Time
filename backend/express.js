@@ -13,17 +13,12 @@ app.listen(3001,()=>{
 });
 
 app.get('/',(req,res)=>{
-  res.send("THIS IS WORKINGGGG");
+  res.send("nodemon is working");
 });
 
-(async () => {
-  let dota = await appid("Counter-Strike")
-  console.log(dota.appid) // 10
-
-  let mystery = await appid(730)
-  console.log(mystery.name) //  "Counter-Strike: Global Offensive"
-
-  let gta = await appid(/Grand Theft Auto/)
-  console.log(gta.slice(0,5))
-
-})();
+app.get('/appid',(req,res)=>{
+  (async () => {
+    let game = await appid(1085660)
+    res.send(game.name);
+  })();
+});

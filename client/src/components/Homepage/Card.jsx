@@ -25,7 +25,6 @@ function Card() {
         console.log(err);
       });
   }, []);
-
   let totalMins = 0;
   let maxTime = 0;
   let favGame = '';
@@ -44,6 +43,14 @@ function Card() {
     favGame: favGame,
     image: profile.image,
   };
+  useEffect(() =>{
+    Axios.post('http://localhost:3001/appid',favGame)
+    .then((res)=>{
+      console.log(res.data);
+    })
+  },[favGame]);
+
+
   return (
     <div className="flex justify-evenly gap-5">
       <div className="card card-compact w-96 bg-base-100 shadow-xl">
