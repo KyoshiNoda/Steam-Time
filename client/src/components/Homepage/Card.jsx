@@ -4,8 +4,11 @@ function Card() {
   let games = {};
   const [gameList, setGameList] = useState(games);
   const [profile, setProfile] = useState({});
+  const [gameID, setGameID] = useState("loading");
   useEffect(() => {
-    Axios.get('http://localhost:6969/ownedgames')
+    let cancel = false;
+    async function startFetch(){
+      Axios.get('http://localhost:6969/ownedgames')
       .then((res) => {
         games = res.data.response.games;
         setGameList(games);
@@ -13,7 +16,16 @@ function Card() {
       .catch((err) => {
         console.log(err);
       });
-    Axios.get('http://localhost:6969/profile')
+    }
+    startFetch();
+    return () =>{
+      cancel = true;
+    }
+  },[]);
+  useEffect(() => { 
+    let cancel = false;
+    async function startFetch(){
+      Axios.get('http://localhost:6969/profile')
       .then((res) => {
         setProfile({
           name: res.data[3],
@@ -24,32 +36,58 @@ function Card() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-  let totalMins = 0;
-  let maxTime = 0;
-  let favGame = '';
-  for (let i = 0; i < gameList.length; i++) {
-    totalMins += gameList[i].playtime_forever;
-    if (gameList[i].playtime_forever > maxTime) {
-      favGame = gameList[i].appid;
-      maxTime = gameList[i].playtime_forever;
     }
+    startFetch();
+    return () =>{
+      cancel = true;
+    }
+  },[]);
+  useEffect(() => { 
+    let cancel = false;
+    async function startFetch(){
+      Axios.get(`http://localhost:3001/appid/${favGame}`)
+      .then((res) =>{
+        favGame = res;
+        setGameID(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+    }
+    startFetch();
+    return () =>{
+      cancel = true;
+    }
+  },[]);
+  const mostPlayedGame = () =>{
+    let maxTime = 0;
+    let name = '';
+    for (let i = 0; i < gameList.length; i++) {
+      if (gameList[i].playtime_forever > maxTime) {
+        name = gameList[i].appid;
+        maxTime = gameList[i].playtime_forever;
+      }
+    }
+    return name;
   }
-  let totalHours = Math.round(totalMins / 60);
+  const totalMins = () =>{
+    let totalMins = 0;
+    for (let i = 0; i < gameList.length; i++) {
+      totalMins += gameList[i].playtime_forever;
+    }
+    return totalMins;
+  }
+  let favGame = mostPlayedGame();
+  let hoursPlayed = Math.round(totalMins() / 60);
+
   const user = {
     name: profile.name,
     totalGames: gameList.length,
-    totalPlayTime: totalHours,
-    favGame: favGame,
+    totalPlayTime: hoursPlayed,
+    favGame: gameID,
     image: profile.image,
   };
-  useEffect(() =>{
-    Axios.post('http://localhost:3001/appid',favGame)
-    .then((res)=>{
-      console.log(res.data);
-    })
-  },[favGame]);
-
 
   return (
     <div className="flex justify-evenly gap-5">
