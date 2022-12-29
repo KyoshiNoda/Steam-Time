@@ -1,13 +1,13 @@
-import React from 'react'
-import Background from '../components/Background'
-import NavBar from '../components/NavBar/NavBar'
+import React from 'react';
+
+import NavBar from '../components/NavBar/NavBar';
 function Statistics() {
   return (
-    <Background>
-      <NavBar/>
+    <>
+      <NavBar />
       Statistics
-    </Background>
-  )
+    </>
+  );
 }
 
-export default Statistics
+export default Statistics;

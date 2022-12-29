@@ -1,15 +1,13 @@
-import React from 'react'
-import NavBar from '../components/NavBar/NavBar'
-import Background from '../components/Background'
-import Main from '../components/Homepage/Main'
+import React from 'react';
+import NavBar from '../components/NavBar/NavBar';
+import Main from '../components/Homepage/Main';
 function Homepage() {
   return (
-    <Background>
-      <NavBar/>
-      <Main/>
-    </Background>
-
-  )
+    <>
+      <NavBar />
+      <Main />
+    </>
+  );
 }
 
-export default Homepage
+export default Homepage;

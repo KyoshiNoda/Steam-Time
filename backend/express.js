@@ -1,22 +1,24 @@
 const express = require('express');
-const path = require('path');
-const app = express();
+const appid = require("appid");
+const bodyParser = require("body-parser");
 const cors=require("cors");
-const corsOptions ={
-   origin:'*', 
-   credentials:true,  //access-control-allow-credentials:true
-   optionSuccessStatus:200,
-}
+const app = express();
 
-app.use(cors(corsOptions)) // Use this after the variable declaration
-
-app.set('views', path.join(__dirname,'views'));
-app.set('view engine', "ejs");
+app.use(cors());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3001,()=>{
   console.log("Listening to port 3001");
 });
 
 app.get('/',(req,res)=>{
-  res.render("view");
+  res.send("nodemon is working");
+});
+
+app.get('/appid',(req,res)=>{
+  (async () => {
+    let game = await appid(1085660)
+    res.send(game.name);
+  })();
 });
