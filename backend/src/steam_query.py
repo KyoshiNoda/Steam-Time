@@ -1,6 +1,7 @@
 import requests
 import json
 import user
+from secret_settings import API_KEY
 
     
 def get_owned_games(steam_id, api_key):
@@ -58,7 +59,7 @@ def query (url, steam_id, api_key):
 
 
 def test():
-    api_key = '69165F7C2940B1D23B6A67783A944BAB'
+    api_key = API_KEY
     steam_id = get_steamid_from_name("Dilian1", api_key)
 
     #TEST: AppID -> Name

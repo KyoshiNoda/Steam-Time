@@ -1,8 +1,9 @@
 import steam_query
+from secret_settings import API_KEY
 
 
 class User:
-    def __init__ (self, steam_name, api_key='69165F7C2940B1D23B6A67783A944BAB'):
+    def __init__ (self, steam_name, api_key='API_KEY'):
         self.steam_name = steam_name
         self.api_key = api_key
         self.steam_id = steam_query.get_steamid_from_name(steam_name, api_key)
