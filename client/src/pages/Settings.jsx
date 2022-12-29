@@ -1,13 +1,12 @@
-import React from 'react'
-import Background from '../components/Background'
-import NavBar from '../components/NavBar/NavBar'
+import React from 'react';
+import NavBar from '../components/NavBar/NavBar';
 function Settings() {
   return (
-    <Background>
-      <NavBar/>
+    <>
+      <NavBar />
       Settings
-    </Background>
-  )
+    </>
+  );
 }
 
-export default Settings
+export default Settings;

@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function NavItem(props) {
-  return (
-    <a href = {props.route}>
-      {props.title}
-    </a>
-  )
+  return <a href={props.route}>{props.title}</a>;
 }
 
-export default NavItem
+export default NavItem;
