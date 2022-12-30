@@ -1,13 +1,13 @@
 import requests
 import json
     
-def get_owned_games(steam_id, api_key):
+def get_owned_games(steam_id: int, api_key: str):
     """
     Returns the owned games of the player
     """
     return query("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/", steam_id, api_key)
 
-def get_total_playtime(app_id, steam_id, api_key):
+def get_total_playtime(app_id: int, steam_id: int, api_key: str):
     """
     Returns the total playtime of the player
     """
@@ -16,7 +16,7 @@ def get_total_playtime(app_id, steam_id, api_key):
         if response_data['response']['games'][i]['appid'] == app_id:
             return response_data['response']['games'][i]['playtime_forever']
 
-def appid_to_name_converter(app_id):
+def appid_to_name_converter(app_id: int):
     """
     Returns the steam appid of a game
     """
@@ -24,7 +24,7 @@ def appid_to_name_converter(app_id):
     return response_data[f'{app_id}']['data']['name']
 
 
-def get_steamid_from_name(steam_name, api_key):
+def get_steamid_from_name(steam_name: int, api_key: str):
     """
     Returns the steamid of the object's name
     """
@@ -33,7 +33,7 @@ def get_steamid_from_name(steam_name, api_key):
         return response_data['response']['steamid']
     return None
 
-def get_profile(steam_id, api_key):
+def get_profile(steam_id: int, api_key: str):
     """
     Returns the steam summary of a player
     """
@@ -43,7 +43,7 @@ def get_profile(steam_id, api_key):
     return response_data['response']['players'][0]
 
 
-def get_app_img_url(app_id):
+def get_app_img_url(app_id: int):
     """
     Returns the image url of a steam application
     """
@@ -55,7 +55,7 @@ def get_app_img_url(app_id):
     except KeyError:
         return None
 
-def query (url, steam_id, api_key):
+def query (url: str, steam_id: int, api_key: str):
     if url.split("/")[4] in ("GetPlayerSummaries"):
         return json.loads(requests.get(f'{url}?key={api_key}&steamids={steam_id}').text)
     return json.loads(requests.get(f'{url}?key={api_key}&steamid={steam_id}').text)
