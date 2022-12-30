@@ -3,3 +3,4 @@ src/secret_settings.py
 src/unit_tests
 src/mongodb_test.py
 venv/pyvenv.cfg
+venv
