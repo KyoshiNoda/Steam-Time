@@ -33,13 +33,13 @@ def appid_to_appname():
         return steam_query.appid_to_name_converter(appid)
 
 
-@app.route("/login", method=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        steam_name = request.form['steam_name']
-        password = request.form['password']
-        api_key = request.form['api_key']
+# @app.route("/login", method=['POST', 'GET'])
+# def login():
+#     if request.method == 'POST':
+#         email = request.form['email']
+#         steam_name = request.form['steam_name']
+#         password = request.form['password']
+#         api_key = request.form['api_key']
 
 
 
