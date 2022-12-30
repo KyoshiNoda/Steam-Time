@@ -1,6 +1,5 @@
 import steam_query
 import user
-
 from flask import Flask, request
 from flask_cors import CORS
 

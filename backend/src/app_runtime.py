@@ -2,16 +2,15 @@ import requests
 import json
 import time
 import threading
+from secret_settings import API_KEY, STEAM_ID
 
 lock = threading.Lock()
 
-steam_id = 76561198871279330
-api_key = "69165F7C2940B1D23B6A67783A944BAB"
 
 time_counter = 0
 
 def game_poller():
-    response_data = json.loads(requests.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=69165F7C2940B1D23B6A67783A944BAB&steamids=76561198871279330").text)
+    response_data = json.loads(requests.get(f'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={API_KEY}&steamids={STEAM_ID}').text)
     if 'gameextrainfo' in response_data['response']['players'][0]:
         return True
     return False
