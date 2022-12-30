@@ -2,3 +2,5 @@
 src/secret_settings.py
 src/unit_tests
 venv
+src/mongodb_test.py
+
