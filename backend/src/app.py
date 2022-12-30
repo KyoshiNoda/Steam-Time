@@ -36,8 +36,12 @@ def appid_to_appname():
 # @app.route("/login", method=['POST', 'GET'])
 # def login():
 #     if request.method == 'POST':
-#         user = request.form['name']
+#         email = request.form['email']
+#         steam_name = request.form['steam_name']
 #         password = request.form['password']
+#         api_key = request.form['api_key']
+
+
 
 
 
