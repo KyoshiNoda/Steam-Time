@@ -4,7 +4,7 @@ function Card() {
   let games = {};
   const [gameList, setGameList] = useState(games);
   const [profile, setProfile] = useState({});
-  const [gameID, setGameID] = useState("loading");
+  const [favGame, setFavGame] = useState("loading");
   useEffect(() => {
     let cancel = false;
     async function startFetch(){
@@ -27,10 +27,11 @@ function Card() {
     async function startFetch(){
       Axios.get('http://localhost:6969/profile')
       .then((res) => {
+        console.log(res);
         setProfile({
-          name: res.data[3],
-          link: res.data[4],
-          image: res.data[7],
+          name : res.data.personaname,
+          image : res.data.avatarfull,
+          link : res.data.profileurl
         });
       })
       .catch((err) => {
@@ -45,11 +46,10 @@ function Card() {
   useEffect(() => { 
     let cancel = false;
     async function startFetch(){
-      Axios.get(`http://localhost:3001/appid/${favGame}`)
+      Axios.get(`http://localhost:3001/appid/${gameID}`)
       .then((res) =>{
-        favGame = res;
-        setGameID(res.data);
-        console.log(res);
+        gameID = res;
+        setFavGame(res.data);
       })
       .catch((err) => {
           console.log(err);
@@ -60,7 +60,8 @@ function Card() {
       cancel = true;
     }
   },[]);
-  const mostPlayedGame = () =>{
+
+  const favGameID = () =>{
     let maxTime = 0;
     let name = '';
     for (let i = 0; i < gameList.length; i++) {
@@ -78,31 +79,35 @@ function Card() {
     }
     return totalMins;
   }
-  let favGame = mostPlayedGame();
+
+  let gameID = favGameID();
   let hoursPlayed = Math.round(totalMins() / 60);
 
   const user = {
     name: profile.name,
     totalGames: gameList.length,
     totalPlayTime: hoursPlayed,
-    favGame: gameID,
+    gameName: favGame,
     image: profile.image,
+    link : profile.link
   };
 
   return (
-    <div className="flex justify-evenly gap-5">
-      <div className="card card-compact w-96 bg-base-100 shadow-xl">
-        <figure>
-          <img className="w-full" src={user.image} alt="steamLogo" />
-        </figure>
-        <div className="card-body p-5 m-5 font-semibold">
-          <h1 className="card-title justify-center text-3xl">{user.name}</h1>
-          <h2>Games Owned: {user.totalGames}</h2>
-          <h2>Total Playtime: {user.totalPlayTime} hours</h2>
-          <h2>Favorite Game ID: {user.favGame}</h2>
+    <a href = {user.link}>
+      <div className="flex justify-evenly gap-5">
+        <div className="card card-compact w-96 bg-base-100 shadow-xl">
+          <figure>
+            <img className="w-full" src={user.image} alt="steamLogo" />
+          </figure>
+          <div className="card-body p-5 m-5 font-semibold">
+            <h1 className="card-title justify-center text-3xl">{user.name}</h1>
+            <h2>Games Owned: {user.totalGames}</h2>
+            <h2>Total Playtime: {user.totalPlayTime} hours</h2>
+            <h2>Favorite Game ID: {user.gameName}</h2>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
 
