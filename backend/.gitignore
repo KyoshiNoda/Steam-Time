@@ -1,2 +1,8 @@
 # Test files
-server\steam_requests_test.py
+src/secret_settings.py
+src/unit_tests
+src/mongodb_test.py
+src/password_test.py
+src/app_runtime.py
+venv/pyvenv.cfg
+venv
