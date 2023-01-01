@@ -1,87 +1,44 @@
 import React, { useState, useEffect } from 'react';
+import { favGameID, totalMins } from '../../Utils/CardAPI';
 import Axios from 'axios';
 function Card() {
-  let games = {};
-  const [gameList, setGameList] = useState(games);
+  const [gameList, setGameList] = useState({});
   const [profile, setProfile] = useState({});
   const [favGame, setFavGame] = useState("loading");
   useEffect(() => {
-    let cancel = false;
-    async function startFetch(){
-      Axios.get('http://localhost:6969/ownedgames')
-      .then((res) => {
-        games = res.data.response.games;
-        setGameList(games);
-      })
-      .catch((err) => {
-        console.log(err);
+    Axios.get('http://localhost:6969/ownedgames')
+    .then((res) => {
+      setGameList(res.data.response.games);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  },[]);
+  useEffect(() => {
+    Axios.get('http://localhost:6969/profile')
+    .then((res) => {
+      setProfile({
+        name : res.data.personaname,
+        image : res.data.avatarfull,
+        link : res.data.profileurl
       });
-    }
-    startFetch();
-    return () =>{
-      cancel = true;
-    }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   },[]);
   useEffect(() => { 
-    let cancel = false;
-    async function startFetch(){
-      Axios.get('http://localhost:6969/profile')
-      .then((res) => {
-        console.log(res);
-        setProfile({
-          name : res.data.personaname,
-          image : res.data.avatarfull,
-          link : res.data.profileurl
-        });
-      })
-      .catch((err) => {
+    Axios.get(`http://localhost:3001/appid`)
+    .then((res) =>{
+      setFavGame(res.data);
+    })
+    .catch((err) => {
         console.log(err);
-      });
-    }
-    startFetch();
-    return () =>{
-      cancel = true;
-    }
-  },[]);
-  useEffect(() => { 
-    let cancel = false;
-    async function startFetch(){
-      Axios.get(`http://localhost:3001/appid/${gameID}`)
-      .then((res) =>{
-        gameID = res;
-        setFavGame(res.data);
-      })
-      .catch((err) => {
-          console.log(err);
-      });
-    }
-    startFetch();
-    return () =>{
-      cancel = true;
-    }
+    });
   },[]);
 
-  const favGameID = () =>{
-    let maxTime = 0;
-    let name = '';
-    for (let i = 0; i < gameList.length; i++) {
-      if (gameList[i].playtime_forever > maxTime) {
-        name = gameList[i].appid;
-        maxTime = gameList[i].playtime_forever;
-      }
-    }
-    return name;
-  }
-  const totalMins = () =>{
-    let totalMins = 0;
-    for (let i = 0; i < gameList.length; i++) {
-      totalMins += gameList[i].playtime_forever;
-    }
-    return totalMins;
-  }
-
-  let gameID = favGameID();
-  let hoursPlayed = Math.round(totalMins() / 60);
+  let gameID = favGameID(gameList);
+  let hoursPlayed = Math.round(totalMins(gameList) / 60);
 
   const user = {
     name: profile.name,
