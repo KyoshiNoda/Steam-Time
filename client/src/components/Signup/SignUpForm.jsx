@@ -25,11 +25,11 @@ function SignUpForm() {
     setSteamURL(event.target.value);
     console.log(steamURL);
   };
-  
-  const steamAPIHandler = (event) =>{
+
+  const steamAPIHandler = (event) => {
     setSteamAPI(event.target.value);
     console.log(steamAPI);
-  }
+  };
 
   return (
     <form className="space-y-4 md:space-y-6" action="#">
@@ -120,7 +120,7 @@ function SignUpForm() {
       </div>
       <button className="btn btn-success w-full">Submit</button>
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
-        Already have an account? { }
+        Already have an account? {}
         <a
           href="/signout"
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"

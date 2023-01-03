@@ -1,12 +1,23 @@
 import React,{useState} from 'react';
-
+import PasswordModal from './Modal/PasswordModal';
+import SaveModal from './Modal/SaveModal';
 function SettingForm() {
-
   const [firstName,setFirstName] = useState();
   const [lastName,setLastName] = useState();
   const [email,setEmail] = useState();
   const [apiKey,setApiKey] = useState();
   const [username,setUsername] = useState("Dlyan");
+  const [saveModal,setSaveModal] = useState(false);
+
+  const formHandler = (event) =>{
+    event.preventDefault();
+  }
+  const saveModalHandler = () =>{
+    setSaveModal(true);
+    setInterval(()=>{
+      setSaveModal(false);
+    },3000)
+  };
 
   const firstNameHandler = (event) =>{
     setFirstName(event.target.value);
@@ -32,8 +43,9 @@ function SettingForm() {
     console.log(username);
   }
 
+
   return (
-    <form>
+    <form onSubmit = {formHandler}>
       <div className="flex m-10">
         <div className="flex-1 first:mr-10">          
           <div className="form-control w-full max-w-xs">
@@ -43,7 +55,7 @@ function SettingForm() {
             <input
               onChange={userNameHandler}
               type="text"
-              placeholder="Dilan"
+              placeholder="epicman2313"
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -108,8 +120,9 @@ function SettingForm() {
         </div>
       </div>
       <div className="flex justify-center gap-5">
-        <button className="btn btn-outline btn-success">Save Changes</button>
-        <button className="btn btn-outline btn-warning">Change Password</button>
+        <button className="btn btn-outline btn-success" onClick ={saveModalHandler}>Save Changes</button>
+        <PasswordModal/>
+        {saveModal === true ? <SaveModal/> : <></>}
       </div>
     </form>
   );
