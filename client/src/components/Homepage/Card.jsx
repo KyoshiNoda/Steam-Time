@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { favGameID, totalMins } from '../../Utils/CardAPI';
+import {totalMins } from '../../Utils/CardAPI';
 import Axios from 'axios';
 function Card() {
   const [gameList, setGameList] = useState({});
@@ -37,7 +37,7 @@ function Card() {
     });
   },[]);
 
-  let gameID = favGameID(gameList);
+  // let gameID = favGameID(gameList);
   let hoursPlayed = Math.round(totalMins(gameList) / 60);
 
   const user = {
