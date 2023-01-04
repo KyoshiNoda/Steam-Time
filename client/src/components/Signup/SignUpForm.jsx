@@ -122,7 +122,7 @@ function SignUpForm() {
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
         Already have an account? {}
         <a
-          href="/signout"
+          href="/SignIn"
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"
         >
           Login here

@@ -40,7 +40,7 @@ function PasswordModal() {
             placeholder="••••••••"
             className="input input-bordered"
           />
-          <button className="btn btn-success">Success</button>
+          <button className="btn btn-success">Change</button>
         </div>
       </div>
     </>
