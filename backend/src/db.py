@@ -1,29 +1,37 @@
+import hash
 from pymongo import MongoClient
-from dateutil import parser
 from pandas import DataFrame
-import bcrypt
 from secret_settings import MONGO_DB_CONNECTION_STRING, MONGO_DB_DATABASE, MONGO_DB_COLLECTION, API_KEY
 
 def get_database(database_name):
     client = MongoClient(MONGO_DB_CONNECTION_STRING)
     return client[database_name]
 
-def create_account(email_hash, steam_name_hash, password_hash, api_key_hash):
+def create_account(email, steam_name, password, api_key):
     database = get_database(MONGO_DB_DATABASE)
     collection = database[MONGO_DB_COLLECTION]
 
     item = {
-        "email" : email_hash,
-        "steam_name" : steam_name_hash,
-        "password" : password_hash,
-        "api_key" : api_key_hash,
+        "email" : email,
+        "steam_name" : steam_name,
+        "password" : password,
+        "api_key" : api_key,
     }
     collection.insert_one(item)
 
-def get_password_hash(email_hash):
+def get_account(email):
     database = get_database(MONGO_DB_DATABASE)
     collection = database[MONGO_DB_COLLECTION]
-    items_df = DataFrame(collection.find({"email": email_hash}))
+    # items_df = DataFrame(collection.find_one({"email": binary.Binary(email_hash)}))
+    items_df = DataFrame(collection.find({"email": email}))
+    if items_df.empty:
+        return None
+    return items_df
+
+def get_password_hash(email):
+    database = get_database(MONGO_DB_DATABASE)
+    collection = database[MONGO_DB_COLLECTION]
+    items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
         return None
     elif items_df["password"][0] == "":
@@ -31,10 +39,10 @@ def get_password_hash(email_hash):
     else:
         return items_df["password"][0]
 
-def get_api_key(email_hash):
+def get_api_key(email):
     database = get_database(MONGO_DB_DATABASE)
     collection = database[MONGO_DB_COLLECTION]
-    items_df = DataFrame(collection.find({"email": email_hash}))
+    items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
         return None
     elif items_df["api_key"][0] == "":
@@ -42,10 +50,10 @@ def get_api_key(email_hash):
     else:
         return items_df["api_key"][0]
 
-def get_steam_name(email_hash):
+def get_steam_name(email):
     database = get_database(MONGO_DB_DATABASE)
     collection = database[MONGO_DB_COLLECTION]
-    items_df = DataFrame(collection.find({"email": email_hash}))
+    items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
         return None
     elif items_df["steam_name"][0] == "":
@@ -56,12 +64,19 @@ def get_steam_name(email_hash):
 
 def main():
     ### Data Already Used, edit data and run
-    
-    # create_account("test1@example.com", "example_name1", "examplepassword1", "1")
-    # create_account("test2@example.com", "example_name2", "examplepassword2", "2")
-    
-    # print(get_password_hash("test1@example.com"))
-    # get_password_hash("asfasfd")
+
+    email = "email@example.com"
+    steam_name_hash = hash.hash_string("example_hash")
+    password_hash = hash.hash_string("hashed_password")
+    api_key_hash = hash.hash_string("239047238")
+
+    # create_account(email, steam_name_hash, password_hash, api_key_hash)
+    # print(get_account(email))
+    # print(get_password_hash(email))
+    # print(get_api_key(email))
+    # print(get_steam_name(email))
+
+    print(hash.compare_hash("hashed_password".encode("utf8"), get_password_hash(email)))
 
 if __name__ == "__main__":
     main()
