@@ -22,7 +22,6 @@ def create_account(email, steam_name, password, api_key):
 def get_account(email):
     database = get_database(MONGO_DB_DATABASE)
     collection = database[MONGO_DB_COLLECTION]
-    # items_df = DataFrame(collection.find_one({"email": binary.Binary(email_hash)}))
     items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
         return None
@@ -76,7 +75,7 @@ def main():
     # print(get_api_key(email))
     # print(get_steam_name(email))
 
-    print(hash.compare_hash("hashed_password".encode("utf8"), get_password_hash(email)))
+    # print(hash.compare_hash("hashed_password".encode("utf8"), get_password_hash(email)))
 
 if __name__ == "__main__":
     main()
