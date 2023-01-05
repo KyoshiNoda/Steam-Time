@@ -24,7 +24,7 @@ function Statistics() {
     <>
       <NavBar />
       <div>
-        <div className='flex justify-evenly items-center'>
+        <div className='flex justify-evenly items-center bg-slate-50'>
           <div className='w-1/3 flex justify-center'>
             <BarChart chartData={userData}/>
           </div>
@@ -33,7 +33,7 @@ function Statistics() {
           </div>
         </div>
 
-        <div className='flex justify-evenly items-center'>
+        <div className='flex justify-evenly items-center bg-slate-50'>
           <div className='w-1/3 flex justify-center'>
             <RadarChart chartData={userData}/>
           </div>
