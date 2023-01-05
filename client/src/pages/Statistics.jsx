@@ -3,6 +3,8 @@ import NavBar from '../components/NavBar/NavBar';
 import { UserData } from '../Utils/Data';
 import BarChart from '../components/Statistics/BarChart';
 import PieChart from '../components/Statistics/PieChart';
+import RadarChart from '../components/Statistics/RadarChart';
+import LineChart from '../components/Statistics/LineChart';
 function Statistics() {
   const [userData,setUserData] = useState({
     labels: UserData.map((data) => data.year),
@@ -21,21 +23,23 @@ function Statistics() {
   return (
     <>
       <NavBar />
-      <div className='flex justify-center'>
-        <div className='w-1/2 p-5'>
-          <BarChart chartData={userData}/>
+      <div>
+        <div className='flex justify-evenly items-center'>
+          <div className='w-1/3 flex justify-center'>
+            <BarChart chartData={userData}/>
+          </div>
+          <div className='w-1/4 flex justify-center'>
+            <PieChart chartData={userData}/>
+          </div>
         </div>
-        <div className='w-1/2 p-5'>
-          <PieChart chartData={userData}/>
-        </div>
-      </div>
 
-      <div className='flex justify-center'>
-        <div className='w-1/2 p-5'>
-          <BarChart chartData={userData}/>
-        </div>
-        <div className='w-1/3 p-5'>
-          <PieChart chartData={userData}/>
+        <div className='flex justify-evenly items-center'>
+          <div className='w-1/3 flex justify-center'>
+            <RadarChart chartData={userData}/>
+          </div>
+          <div className='w-1/3 flex justify-center'>
+            <LineChart chartData={userData}/>
+          </div>
         </div>
       </div>
     </>
