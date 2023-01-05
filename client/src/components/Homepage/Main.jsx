@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'react-daisyui';
 import Card from './Card';
 function Main() {
   return (
@@ -14,7 +13,9 @@ function Main() {
             Cultivates a healthy game/break ratio and attempts to prevent the
             user from playing videogames too long <br />
           </div>
-          <Button color="primary">View More</Button>
+          <a href = '/signup' className='flex flex-col'>
+            <button className="btn btn-primary text-lg">View More</button>
+          </a>
         </div>
       </div>
     </div>

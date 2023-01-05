@@ -18,7 +18,18 @@ app.get('/',(req,res)=>{
 
 app.get('/appid',(req,res)=>{
   (async () => {
-    let game = await appid(1085660)
+    let game = await appid(500)
     res.send(game.name);
   })();
 });
+
+// app.get("/appid/:id", async function (req, res) {
+//   try {
+//     // from route params
+//     var id = req.params.id;
+//     let game = await appid(parseInt(id));
+
+//     res.send(game.name);
+//   } catch (error) {}
+// });
+
