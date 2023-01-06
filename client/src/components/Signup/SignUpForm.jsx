@@ -1,34 +1,53 @@
 import React, { useState } from 'react';
-function SignUpForm() {
+function SignUpForm(props) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [steamURL, setSteamURL] = useState();
   const [steamAPI, setSteamAPI] = useState();
 
+  const formHandler = (event) =>{
+    event.preventDefault();
+    if (email === undefined || password === undefined || confirmPassword === undefined || steamURL === undefined || steamAPI === undefined){
+      console.log("missing info");
+      return;
+    }
+    if (password.length < 10){
+      console.log("password not long enough");
+      return;
+    }
+    if(password !== confirmPassword){
+      console.log("password does not match");
+      return;
+    }
+
+    let user = {
+      currentEmail : email,
+      currentPassword : password,
+      currentSteamURL : steamURL,
+      currentSteamAPI : steamAPI
+    }
+    props.currentUser(user);
+  }
+
   const emailHandler = (event) => {
     setEmail(event.target.value);
-    console.log(email);
   };
 
   const passwordHandler = (event) => {
     setPassword(event.target.value);
-    console.log(password);
   };
 
   const confirmPasswordHandler = (event) => {
     setConfirmPassword(event.target.value);
-    console.log(confirmPassword);
   };
 
   const steamURLHandler = (event) => {
     setSteamURL(event.target.value);
-    console.log(steamURL);
   };
 
   const steamAPIHandler = (event) => {
     setSteamAPI(event.target.value);
-    console.log(steamAPI);
   };
 
   return (
@@ -118,7 +137,7 @@ function SignUpForm() {
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       </div>
-      <button className="btn btn-success w-full">Submit</button>
+      <button type = 'submit' onClick ={formHandler} className="btn btn-success w-full">Submit</button>
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
         Already have an account? {}
         <a

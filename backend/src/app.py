@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-USER = None
+USER = user.User("test@example.com", "Dilian1")
 
 
 @app.route("/profile", methods=['GET'])
