@@ -41,7 +41,7 @@ def appid_to_appname():
 def createaccount():
     if request.method == 'POST':
         email = request.form['email']
-        steam_name = hash.hash_string(request.form['steam_name'])
+        steam_name = request.form['steam_name']
         password = hash.hash_string(request.form['password'])
         api_key = hash.hash_string(request.form['api_key'])
         if db.get_account(email) != None:
