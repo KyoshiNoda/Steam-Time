@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import NavBar from '../components/NavBar/NavBar';
-import { UserData,BarData } from '../Utils/Data';
+import { UserData,BarData, PieData } from '../Utils/Data';
 import BarChart from '../components/Statistics/BarChart';
 import PieChart from '../components/Statistics/PieChart';
 import RadarChart from '../components/Statistics/RadarChart';
@@ -36,6 +36,22 @@ function Statistics() {
       data: BarData.map((data) => data.mins),
     }]
   });
+  const [pieChartData,setPieChartData] = useState({
+    labels: PieData.map((data) => data.action),
+    datasets : [{
+      label : 'Activities Break Down',
+      backgroundColor: [
+        '#b87a44',
+        "#eeb111",
+        "#8cc63f",
+        "#569bbe",
+        '#247ba0',
+        '#34b233',
+        '#dc4cdc'
+      ],
+      data: PieData.map((data) => data.mins),
+    }]
+  });
   return (
     <>
       <NavBar />
@@ -45,7 +61,7 @@ function Statistics() {
             <BarChart chartData={barChartData}/>
           </div>
           <div className='w-1/4 flex justify-center'>
-            <PieChart chartData={userData}/>
+            <PieChart chartData={pieChartData}/>
           </div>
         </div>
 

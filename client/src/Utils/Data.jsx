@@ -61,4 +61,24 @@ export const BarData = [
     day : 'Sunday',
     mins : 520,
   },
-]
+];
+
+export const PieData = [
+  {
+    action : 'Games',
+    mins : 500,
+  },
+  {
+    action : 'Reading',
+    mins : 100
+  },
+  {
+    action : 'Working out',
+    mins : 300,
+  },
+  {
+    action : 'Coding',
+    mins : 400
+  }
+
+];
