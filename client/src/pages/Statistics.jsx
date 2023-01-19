@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import NavBar from '../components/NavBar/NavBar';
-import { UserData } from '../Utils/Data';
+import { UserData,BarData } from '../Utils/Data';
 import BarChart from '../components/Statistics/BarChart';
 import PieChart from '../components/Statistics/PieChart';
 import RadarChart from '../components/Statistics/RadarChart';
@@ -12,12 +12,28 @@ function Statistics() {
       label : 'Users Gained',
       backgroundColor: [
         "rgba(75,192,192,1)",
-        "#ecf0f1",
-        "#50AF95",
+        "#264653",
+        "#2a9d8f",
         "#f3ba2f",
         "#2a71d0",
       ],
       data: UserData.map((data) => data.userGain),
+    }]
+  });
+  const [barChartData,setBarData] = useState({
+    labels: BarData.map((data) => data.day),
+    datasets : [{
+      label : 'Weekly Report',
+      backgroundColor: [
+        '#b87a44',
+        "#eeb111",
+        "#8cc63f",
+        "#569bbe",
+        '#247ba0',
+        '#34b233',
+        '#dc4cdc'
+      ],
+      data: BarData.map((data) => data.mins),
     }]
   });
   return (
@@ -26,7 +42,7 @@ function Statistics() {
       <div>
         <div className='flex justify-evenly items-center bg-slate-50'>
           <div className='w-1/3 flex justify-center'>
-            <BarChart chartData={userData}/>
+            <BarChart chartData={barChartData}/>
           </div>
           <div className='w-1/4 flex justify-center'>
             <PieChart chartData={userData}/>

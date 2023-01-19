@@ -30,3 +30,35 @@ export const UserData = [
       userLost: 234
     }
   ];
+
+export const BarData = [
+  {
+    day : 'Monday',
+    mins : 120,
+  },
+
+  {
+    day : 'Tuesday',
+    mins : 30,
+  },
+  {
+    day : 'Wednesday',
+    mins : 32,
+  },
+  {
+    day : 'Thursday',
+    mins : 42,
+  },
+  {
+    day : 'Friday',
+    mins : 320,
+  },
+  {
+    day : 'Saturday',
+    mins : 340,
+  },
+  {
+    day : 'Sunday',
+    mins : 520,
+  },
+]
