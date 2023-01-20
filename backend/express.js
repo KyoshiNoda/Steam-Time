@@ -23,7 +23,8 @@ app.post('/signup',(req,res) =>{
 });
 
 app.get('/signup',(req,res) =>{
-  res.send(req);
+  res.send("hello world");
+  res.send(req.body);
   console.log(req);
 });
 
