@@ -8,20 +8,20 @@ function SignUpContainer() {
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const currentUserHandler = (user) => {
     console.log(user);
-    // Axios.post(`http://localhost:6969/createaccount`, user)
+    Axios.post(`http://localhost:6969/createaccount`, user)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // Axios.post('http://localhost:3001/signup', user)
     //   .then((res) => {
     //     console.log(res);
     //   })
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    Axios.post('http://localhost:3001/signup',user)
-    .then((res) =>{
-      console.log(res);
-    })
-    .catch((err) =>{
-      console.log(err);
-    })
   };
   const alertHandler = (res) => {
     setIsMissingInfo(res);
