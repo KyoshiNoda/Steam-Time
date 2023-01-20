@@ -30,10 +30,10 @@ function SignUpForm(props) {
     }
 
     let user = {
-      currentEmail: email,
-      currentPassword: password,
-      currentSteamURL: steamURL,
-      currentSteamAPI: steamAPI,
+      email: email,
+      password: password,
+      steam_name: steamURL, // going to be changed later
+      api_key: steamAPI,
     };
     props.currentUser(user);
   };
@@ -153,7 +153,7 @@ function SignUpForm(props) {
         Submit
       </button>
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
-        Already have an account? {}
+        Already have an account? { }
         <a
           href="/SignIn"
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"
