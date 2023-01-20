@@ -20,9 +20,9 @@ def profile():
 def owned_games():
     return steam_query.get_owned_games(USER.get_steam_id(), USER.get_api_key())
 
-@app.route("/getappimage", methods=['POST', 'GET'])
+@app.route("/getappimage", methods=['GET'])
 def app_image():
-    if request.method == 'POST':
+    if request.method == 'GET':
         appid = request.form['appid']
     return steam_query.get_app_img_url(appid, USER.get_steam_id(), USER.get_api_key())
 
@@ -47,10 +47,10 @@ def createaccount_success():
 @app.route("/createaccount", methods=['POST', 'GET'])
 def create_account():
     if request.method == 'POST':
-        email = request.form['email']
-        steam_name = request.form['steam_name']
-        password = hash.hash_string(request.form['password'])
-        api_key = hash.hash_string(request.form['api_key'])
+        email = request.form.get['email']
+        steam_name = request.form.get['steam_name']
+        password = hash.hash_string(request.form.get['password'])
+        api_key = hash.hash_string(request.form.get['api_key'])
         if db.get_account(email) != None:
             return redirect(url_for('/createaccount/failure'))
         else:
