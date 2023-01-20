@@ -54,9 +54,10 @@ def create_account():
         if db.get_account(email) != None:
             return redirect(url_for('/createaccount/failure'))
         else:
+
             USER = user.User(email, steam_name, api_key)
             return redirect(url_for('/createaccount/success'))
-    return {"Create an account!"}
+    return "Create an account!"
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
