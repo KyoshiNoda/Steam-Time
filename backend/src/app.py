@@ -2,7 +2,7 @@ import steam_query
 import hash
 import db
 import user
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -36,39 +36,41 @@ def appid_to_appname():
         appid = request.form['appid']
         return steam_query.appid_to_name_converter(appid)
 
-@app.route("/failure", methods=["GET"])
+@app.route("/failure")
 def createaccount_failure():
     return {"success": 0}
 
-@app.route("/success", methods=["GET"])
+@app.route("/success")
 def createaccount_success():
     return {"success": 1}
 
 @app.route("/createaccount", methods=['POST', 'GET'])
 def create_account():
     if request.method == 'POST':
-        email = request.form.get['email']
-        steam_name = request.form.get['steam_name']
-        password = hash.hash_string(request.form.get['password'])
-        api_key = hash.hash_string(request.form.get['api_key'])
-        if db.get_account(email) != None:
-            return redirect(url_for('/createaccount/failure'))
-        else:
+        email = request.args.get('email')
+        steam_name = request.args.get('steam_name')
+        password = hash.hash_string(str(request.args.get('password')))
+        api_key = hash.hash_string(str(request.args.get('api_key')))
+        
+        # if db.get_account(email) != None:
+        #     return redirect(url_for('/createaccount/failure'))
+        # else:
 
-            USER = user.User(email, steam_name, api_key)
-            return redirect(url_for('/createaccount/success'))
-    return "Create an account!"
+        #     USER = (email)
+        #     return redirect(url_for('/createaccount/success'))
+    return "success!"
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = str(request.args.get('email'))
+        password = str(request.args.get('password'))
 
-        if db.compare_passwords(email, password) == True:
-            return redirect(url_for("/success"))
-        else:
-            return redirect(url_for("/failure"))
+        # if db.compare_passwords(email, password) == True:
+        #     return redirect(url_for("/success"))
+        # else:
+        #     return redirect(url_for("/failure"))
+    return "success!"
 
 @app.route("/change-password", methods=['POST', 'GET'])
 def change_password():
