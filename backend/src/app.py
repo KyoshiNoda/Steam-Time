@@ -1,7 +1,7 @@
 import steam_query
 import hash
 import db
-# import user
+import user
 from flask import Flask, request, redirect, url_for, jsonify
 from flask_cors import CORS
 
@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-USER = ("test@example.com", "Dilian1")
+USER = user.User("test@example.com", "Dilian1")
 
 
 @app.route("/profile", methods=['GET'])
