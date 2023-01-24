@@ -19,7 +19,7 @@ class User:
         return self.steam_id
 
 def test():
-    user1 = User("Dilian1")
+    user1 = User("test@example.com", "Dilian1")
     print(user1.get_steam_id())
 
 if __name__ == '__main__':
