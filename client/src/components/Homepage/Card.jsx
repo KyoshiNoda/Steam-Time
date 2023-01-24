@@ -6,7 +6,7 @@ function Card() {
   const [profile, setProfile] = useState({});
   const [favGame, setFavGame] = useState("loading");
   useEffect(() => {
-    Axios.get('http://localhost:6969/ownedgames')
+    Axios.get('http://localhost:5000/owned-games')
     .then((res) => {
       setGameList(res.data.response.games);
     })
@@ -15,7 +15,7 @@ function Card() {
     });
   },[]);
   useEffect(() => {
-    Axios.get('http://localhost:6969/profile')
+    Axios.get('http://localhost:5000/profile')
     .then((res) => {
       setProfile({
         name : res.data.personaname,
@@ -28,7 +28,7 @@ function Card() {
     });
   },[]);
   useEffect(() => { 
-    Axios.get(`http://localhost:3001/appid`)
+    Axios.get(`http://localhost:5000/appid-to-app-name`)
     .then((res) =>{
       setFavGame(res.data);
     })
