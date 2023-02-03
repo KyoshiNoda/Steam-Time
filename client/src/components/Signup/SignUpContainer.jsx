@@ -8,9 +8,15 @@ function SignUpContainer() {
   const [isPasswordMatch, setIsPasswordMatch] = useState(false);
   const currentUserHandler = (user) => {
     let jsonUser = JSON.stringify(user);
-    Axios.post(`http://localhost:6969/createaccount`, jsonUser)
+    Axios.post(`http://localhost:5000/create-account`, {
+      email: "dyl@example.com", //this email is already in database
+      steam_name: "Dilianx",
+      password: "test123",
+      api_key: "lolol"
+    })
       .then((res) => {
         console.log(res);
+        console.log(res.data)
       })
       .catch((err) => {
         console.log(err);
