@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import SignInModal from './SignInModal';
 function SignInForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -36,11 +36,16 @@ function SignInForm() {
             placeholder="password"
             className="input input-bordered"
           />
-          <label className="label">
-            <a href="#" className="label-text-alt link link-hover">
-              Forgot password?
-            </a>
-          </label>
+          <div className='flex'>
+            <label className="label">
+              <SignInModal/>
+            </label>
+            <label className="label justify-end">
+              <a href="/Signup" className="label-text-alt link link-hover">
+                Don't have any account?
+              </a>
+            </label>
+          </div>
         </div>
         <div className="form-control mt-6">
           <button className="btn btn-primary">Login</button>

@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cubejs-client/core": "^0.31.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.1",
+    "chart.js": "^4.1.1",
     "daisyui": "^2.46.0",
     "dayjs": "^1.11.7",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.1.0",
     "react-daisyui": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.5.0",
@@ -37,6 +40,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.13",
     "eslint-config-prettier": "^8.5.0",
+    "parcel": "^2.6.2",
     "postcss": "^8.4.20",
     "prettier": "2.8.1",
     "tailwindcss": "^3.2.4"

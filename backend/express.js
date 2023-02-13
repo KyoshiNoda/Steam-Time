@@ -16,6 +16,19 @@ app.get('/',(req,res)=>{
   res.send("nodemon is working");
 });
 
+
+app.post('/signup',(req,res) =>{
+  console.log(req.body);
+  res.send(req.body);
+});
+
+app.get('/signup',(req,res) =>{
+  res.send("hello world");
+  res.send(req.body);
+  console.log(req);
+});
+
+
 app.get('/appid',(req,res)=>{
   (async () => {
     let game = await appid(500)
