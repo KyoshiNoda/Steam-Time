@@ -1,8 +1,16 @@
-import hash
 from pymongo import MongoClient, errors
 from pandas import DataFrame
-from secret_settings import MONGO_DB_CONNECTION_STRING, MONGO_DB_DATABASE, MONGO_DB_COLLECTION, API_KEY
 
+from pathlib import Path
+import sys
+path = str(Path(Path(__file__).parent.absolute()).parent.absolute())
+sys.path.insert(0, path)
+from internal import hash
+# from secret_settings import MONGO_DB_CONNECTION_STRING, secret_settings.MONGO_DB_CONNECTION_STRING, secret_settings.MONGO_DB_COLLECTION, API_KEY
+# MONGO_DB_CONNECTION_STRING = "mongodb://mongo:ITRZrekqitDKMiAHz8Md@containers-us-west-100.railway.app:5937"
+# secret_settings.MONGO_DB_CONNECTION_STRING = "Steam-Time"
+# secret_settings.MONGO_DB_COLLECTION = "Accounts"
+from secret_stuff import secret_settings
 
 def get_database(database_name):
     """
@@ -10,7 +18,7 @@ def get_database(database_name):
     Returns errors.ConnectionFailure if connection fails
     """
     try:
-        conn = MongoClient(MONGO_DB_CONNECTION_STRING)
+        conn = MongoClient(secret_settings.MONGO_DB_CONNECTION_STRING)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return errors.ConnectionFailure
@@ -21,9 +29,9 @@ def create_account(email, steam_name, password, api_key):
     """
     Creates a document within Accounts collection of database
     """
-    database = get_database(MONGO_DB_DATABASE)
+    database = get_database(secret_settings.MONGO_DB_DATABASE)
     try:
-        collection = database[MONGO_DB_COLLECTION]
+        collection = database[secret_settings.MONGO_DB_COLLECTION]
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return None
@@ -45,12 +53,12 @@ def create_account(email, steam_name, password, api_key):
 
 def get_account(email):
     try:
-        database = get_database(MONGO_DB_DATABASE)
+        database = get_database(secret_settings.MONGO_DB_DATABASE)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return None
 
-    collection = database[MONGO_DB_COLLECTION]
+    collection = database[secret_settings.MONGO_DB_COLLECTION]
 
     items_df = DataFrame(collection.find({"email": email}))
     return items_df
@@ -69,12 +77,12 @@ def check_existing_account(email):
 
 def get_password_hash(email):
     try:
-        database = get_database(MONGO_DB_DATABASE)
+        database = get_database(secret_settings.MONGO_DB_DATABASE)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return errors.ConnectionFailure
     
-    collection = database[MONGO_DB_COLLECTION]
+    collection = database[secret_settings.MONGO_DB_COLLECTION]
 
     items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
@@ -86,12 +94,12 @@ def get_password_hash(email):
 
 def get_api_key(email):
     try:
-        database = get_database(MONGO_DB_DATABASE)
+        database = get_database(secret_settings.MONGO_DB_DATABASE)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return None
     
-    collection = database[MONGO_DB_COLLECTION]
+    collection = database[secret_settings.MONGO_DB_COLLECTION]
 
     items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
@@ -103,11 +111,11 @@ def get_api_key(email):
 
 def get_steam_name(email):
     try:
-        database = get_database(MONGO_DB_DATABASE)
+        database = get_database(secret_settings.MONGO_DB_DATABASE)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return None
-    collection = database[MONGO_DB_COLLECTION]
+    collection = database[secret_settings.secret_settings.MONGO_DB_COLLECTION]
 
     items_df = DataFrame(collection.find({"email": email}))
     if items_df.empty:
@@ -129,11 +137,11 @@ def compare_passwords(email, password):
 
 def change_password(email, new_password):
     try:
-        database = get_database(MONGO_DB_DATABASE)
+        database = get_database(secret_settings.MONGO_DB_DATABASE)
     except errors.ConnectionFailure:
         print("Cannot connect to database!")
         return False
-    collection = database[MONGO_DB_COLLECTION]
+    collection = database[secret_settings.MONGO_DB_COLLECTION]
 
     filter = {"email": email}
     new_values = {"$set": {"password": new_password}}
@@ -148,19 +156,19 @@ def change_password(email, new_password):
 def main():
     ### Data Already Used, edit data and run
 
-    email = "email@example.com"
+    email = "email2@example.com"
     steam_name_hash = hash.hash_string("example_hash")
     password_hash = hash.hash_string("hashed_password")
     api_key_hash = hash.hash_string("239047238")
 
     
-    # create_account(email, steam_name_hash, password_hash, api_key_hash)
+    create_account(email, steam_name_hash, password_hash, api_key_hash)
     # print(get_account(email))
     # print(get_password_hash(email))
     # print(get_api_key(email))
     # print(get_steam_name(email))
 
-    print(change_password(email, "meow"))
+    # print(change_password(email, "meow"))
 
     # print(hash.compare_hash("hashed_password".encode("utf8"), get_password_hash(email)))
 

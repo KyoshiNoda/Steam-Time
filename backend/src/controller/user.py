@@ -1,10 +1,14 @@
-import steam_query
-from secret_settings import API_KEY
+from pathlib import Path
+import sys
+path = str(Path(Path(__file__).parent.absolute()).parent.absolute())
+sys.path.insert(0, path)
+
+from query import steam_query
+from secret_stuff import secret_settings
 
 
 class User:
-    def __init__ (self, email, steam_name, api_key=API_KEY):
-        self.email = email
+    def __init__ (self, steam_name, api_key=secret_settings.API_KEY):
         self.steam_name = steam_name
         self.api_key = api_key
         self.steam_id = steam_query.get_steamid_from_name(steam_name, api_key)
@@ -19,7 +23,7 @@ class User:
         return self.steam_id
 
 def test():
-    user1 = User("test@example.com", "Dilian1")
+    user1 = User("Dilian1")
     print(user1.get_steam_id())
 
 if __name__ == '__main__':
