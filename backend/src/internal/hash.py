@@ -11,7 +11,7 @@ def compare_hash(hash_a: str, hash_b: str):
     @param hash_a: Unhashed encoded string
     @param hash_b: Hashed encoded string\n
     Compare two hashes and returns the result.
-    Both Hash Strings must be encoded with utf8
+    Both hash strings must be encoded with utf8
     """
     return bcrypt.checkpw(hash_a, hash_b)
 

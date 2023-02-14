@@ -21,11 +21,9 @@ def create_account():
     if db.check_existing_account(email) == None:
         return "internal server error"
     elif db.check_existing_account(email) == True:
-        # return redirect(url_for('/createaccount/failure'))
         return jsonify(success=False, description="Account already exists")
     else:
         USER = user.User(steam_name)
-        # return redirect(url_for('/createaccount/success'))
         db.create_account(email, steam_name, password, api_key)
         return jsonify(success=True, description="Account created")
 

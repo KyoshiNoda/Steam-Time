@@ -6,10 +6,6 @@ import sys
 path = str(Path(Path(__file__).parent.absolute()).parent.absolute())
 sys.path.insert(0, path)
 from internal import hash
-# from secret_settings import MONGO_DB_CONNECTION_STRING, secret_settings.MONGO_DB_CONNECTION_STRING, secret_settings.MONGO_DB_COLLECTION, API_KEY
-# MONGO_DB_CONNECTION_STRING = "mongodb://mongo:ITRZrekqitDKMiAHz8Md@containers-us-west-100.railway.app:5937"
-# secret_settings.MONGO_DB_CONNECTION_STRING = "Steam-Time"
-# secret_settings.MONGO_DB_COLLECTION = "Accounts"
 from secret_stuff import secret_settings
 
 def get_database(database_name):
