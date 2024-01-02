@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SignInModal from './SignInModal';
+import SteamButton from './SteamButton';
 function SignInForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -38,7 +39,7 @@ function SignInForm() {
           />
           <div className='flex'>
             <label className="label">
-              <SignInModal/>
+              <SignInModal />
             </label>
             <label className="label justify-end">
               <a href="/Signup" className="label-text-alt link link-hover">
@@ -47,8 +48,11 @@ function SignInForm() {
             </label>
           </div>
         </div>
-        <div className="form-control mt-6">
+        <div className="form-control mt-2">
           <button className="btn btn-primary">Login</button>
+        </div>
+        <div className="form-control">
+          <SteamButton />
         </div>
       </div>
     </div>
