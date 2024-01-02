@@ -16,6 +16,7 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        {/* <Route path="/wizard" element={<Wizard />} /> */}
       </Routes>
     </>
   );
