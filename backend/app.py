@@ -29,7 +29,7 @@ def login_process():
   login = SteamSignIn()
   steam_id = login.ValidateResults(data)
   if steam_id:
-    return '{}'.format(steam_id)
+    return jsonify({'steam_id': '{}'.format(steam_id)})
   else:
     return 'failed login.'
 
