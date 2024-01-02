@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { TiTick } from "react-icons/ti";
 import "./Stepper.css";
-const Wizard = () => {
+
+const Stepper = ({ currentStep, handleNextStep, complete }) => {
   const steps = ["login", "API key"];
-  const [currentStep, setCurrentStep] = useState(1);
-  const [complete, setComplete] = useState(false);
+
   return (
     <>
       <div className="flex justify-between">
@@ -25,9 +25,7 @@ const Wizard = () => {
         <button
           className="btn"
           onClick={() => {
-            currentStep === steps.length
-              ? setComplete(true)
-              : setCurrentStep((prev) => prev + 1);
+            currentStep === steps.length ? handleNextStep() : handleNextStep();
           }}
         >
           {currentStep === steps.length ? "Finish" : "Next"}
@@ -37,4 +35,4 @@ const Wizard = () => {
   );
 };
 
-export default Wizard;
+export default Stepper;

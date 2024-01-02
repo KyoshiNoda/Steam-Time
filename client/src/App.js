@@ -14,9 +14,8 @@ function App() {
         <Route path="/Settings" element={<Settings />} />
         <Route path="/statistics" element={<Statistics />} />
         <Route path="/timer" element={<Timer />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        {/* <Route path="/wizard" element={<Wizard />} /> */}
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<SignUp />} />
       </Routes>
     </>
   );
