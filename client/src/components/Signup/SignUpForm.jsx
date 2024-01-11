@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-function SignUpForm(props) {
+import Axios from 'axios';
+function SignUpForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-  const [steamURL, setSteamURL] = useState();
-  const [steamAPI, setSteamAPI] = useState();
+  const [apiKey, setAPIKey] = useState();
 
   const formHandler = (event) => {
     event.preventDefault();
@@ -12,50 +12,31 @@ function SignUpForm(props) {
       email === undefined ||
       password === undefined ||
       confirmPassword === undefined ||
-      steamURL === undefined ||
-      steamAPI === undefined
+      apiKey === undefined
     ) {
-      props.missingInfo(true);
       return;
     }
     if (password.length < 10) {
       console.log('password not long enough');
-      props.passwordLength(true);
       return;
     }
     if (password !== confirmPassword) {
       console.log('password does not match');
-      props.passwordMatch(true);
       return;
     }
 
     let user = {
       email: email,
       password: password,
-      steam_name: steamURL, // going to be changed later
-      api_key: steamAPI,
+      api_key: apiKey,
     };
-    props.currentUser(user);
-  };
-
-  const emailHandler = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const passwordHandler = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const confirmPasswordHandler = (event) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  const steamURLHandler = (event) => {
-    setSteamURL(event.target.value);
-  };
-
-  const steamAPIHandler = (event) => {
-    setSteamAPI(event.target.value);
+    Axios.post('http://localhost:8000/api/auth/register', user)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -69,7 +50,7 @@ function SignUpForm(props) {
         </label>
         <input
           type="email"
-          onChange={emailHandler}
+          onChange={(event) => setEmail(event.target.value)}
           name="email"
           id="email"
           required=""
@@ -86,7 +67,7 @@ function SignUpForm(props) {
         </label>
         <input
           type="password"
-          onChange={passwordHandler}
+          onChange={(event) => setPassword(event.target.value)}
           name="password"
           id="password"
           placeholder="••••••••"
@@ -102,7 +83,7 @@ function SignUpForm(props) {
           Confirm password
         </label>
         <input
-          onChange={confirmPasswordHandler}
+          onChange={(event) => setConfirmPassword(event.target.value)}
           type="password"
           name="confirm-password"
           id="confirm-password"
@@ -113,34 +94,17 @@ function SignUpForm(props) {
       </div>
       <div>
         <label
-          htmlFor="steamURL"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Steam URL
-        </label>
-        <input
-          onChange={steamURLHandler}
-          type="text"
-          name="steamURL"
-          id="steamURL"
-          placeholder="https://steamcommunity.com/id/PlentyJapan"
-          required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="steamURL"
+          htmlFor="APIKEY"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           API KEY
         </label>
         <input
-          onChange={steamAPIHandler}
-          type="text"
-          name="steamURL"
-          id="steamURL"
-          placeholder="398B2A3414PI24"
+          onChange={(event) => setAPIKey(event.target.value)}
+          type="password"
+          name="apiKEY"
+          id="apiKEY"
+          placeholder="••••••••••••••"
           required=""
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
@@ -153,7 +117,7 @@ function SignUpForm(props) {
         Submit
       </button>
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
-        Already have an account? { }
+        Already have an account? {}
         <a
           href="/SignIn"
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"
