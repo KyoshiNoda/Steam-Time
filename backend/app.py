@@ -1,10 +1,11 @@
-from flask import Flask, jsonify, request, Response, session
+from flask import Flask, jsonify, request, Response, redirect
 from database.db import db
 from database.models import User
 from dotenv import load_dotenv
 from pysteamsignin.steamsignin import SteamSignIn
 import bcrypt
 import requests
+import json
 import os
 from database.util import create_user
 load_dotenv()
@@ -15,41 +16,27 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 app.secret_key = os.urandom(24)
 
-    
+
 @app.route("/api/login-success")
 def login_success():
-    """
-      user = User(db.find(steamid))
-      if not user:
-        response = api.getPlayerSummary(apiKey,steamId)
-        user.name = response.name
-        user.picture = response.picture....
-
-        db.add_row(user)
-
-      public_user = publicUser(user)
-      return Response(201, public_user)
-    """
-
     return Response(
-        response=jsonify({"status": "Login Success"},
-                         status=201, mimetype="application/json")
-    )
+        response=json.dumps({"status": "Login Success"}),
+        status=201, mimetype="application/json")
 
 
 @app.route("/api/login-failure")
 def login_failure():
     return Response(
-        response=jsonify({"status": "Login Failure"},
-                         status=401, mimetype="application/json")
-    )
+        response=json.dumps({"status": "Login Failure"}),
+        status=401, mimetype="application/json")
 
 
 @app.route("/")
 def steam_login():
     apikey = request.values.get('apikey')
     login = SteamSignIn()
-    return login.RedirectUser(login.ConstructURL(f"http://localhost:8000/api/login?api_key={apikey}"))
+    return login.RedirectUser(login.ConstructURL(f"http://localhost:8000/api/login?apikey={apikey}"))
+
 
 @app.route("/api/users")
 def get_users():
@@ -57,25 +44,35 @@ def get_users():
     users_list = [user.to_dict() for user in users]
     return jsonify(users_list)
 
+
 @app.route("/api/login")
 def login_process():
     data = request.values
-    print("TEST: " + str(data))
     login = SteamSignIn()
-    steam_id = login.ValidateResults(data)
-
-
-
-""" 
-  def sucess_login()j:
-    if user:
-      Response(200, user.json())
-    else:
-      db.add(user)
-      Response(200,user.json())
+    steamid = login.ValidateResults(data)
+    apikey = data.get("apikey")
+    response = requests.post(
+        url="http://localhost:8000/api/getplayersummary",
+        data={
+            "steamids": steamid,
+            "apikey": apikey
+        }).json()['response']['players'][0]
     
-"""
-
+    apikey = (bcrypt.hashpw(apikey.encode('utf-8'), bcrypt.gensalt())).decode()
+    db_resp = create_user(
+        {
+            "steamid": steamid,
+            "username": response['personaname'],
+            "logintype": "Steam",
+            "apikey": apikey,
+            "steamurl": response['profileurl'],
+            "fullavatarurl": response["avatarfull"]
+        })
+    
+    if db_resp == True:
+        return redirect("http://localhost:8000/api/login-success")
+    else:
+        return redirect("http://localhost:8000/api/login-failure")
 
 @app.route("/api/createaccount", methods=['POST'])
 def create_account():
@@ -175,22 +172,41 @@ def get_steam_level():
             return 'failure to get steam level games. Error: HTTP {}'.format(response.status_code)
     else:
         return "invalid steamid"
-    
+
+
+@app.route("/api/getplayersummary", methods=['POST'])
+def get_player_summary():
+    url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+    print("HELP: " + request.form["apikey"])
+    if "steamids" in request.form.keys():
+        params = {
+            "key": request.form["apikey"],
+            "steamids": request.form["steamids"]
+        }
+        response = requests.get(url=url, params=params)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return 'failure to get steam level games. Error: HTTP {}'.format(response.status_code)
+    else:
+        return "invalid steamid"
+
+
 @app.route("/dev/test_db")
 def test_create_user_1():
-        user = {
-            "steamid": str(os.urandom(17).hex()),
-            "email": str(os.urandom(10).hex()) + "@gmail.com",
-            "username": "Test_Case_1",
-            "password": "wildcat",
-            "logintype": "Steam",
-            "apikey": str(os.urandom(24).hex()),
-            "steamurl": "http://url.jpg",
-            "fullavatarurl": "http://avatar.jpg"
-        }
+    user = {
+        "steamid": str(os.urandom(17).hex()),
+        "email": str(os.urandom(10).hex()) + "@gmail.com",
+        "username": "Test_Case_1",
+        "password": "wildcat",
+        "logintype": "Steam",
+        "apikey": str(os.urandom(24).hex()),
+        "steamurl": "http://url.jpg",
+        "fullavatarurl": "http://avatar.jpg"
+    }
 
-        result = create_user(user)
-        return str(result)
+    result = create_user(user)
+    return str(result)
 
 
 if __name__ == '__main__':
