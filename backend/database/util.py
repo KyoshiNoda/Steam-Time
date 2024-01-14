@@ -1,7 +1,5 @@
 from database.db import db
 from database.models import User
-import unittest
-import os
 
 def create_user(userdata: dict):
     user = User(
@@ -14,9 +12,6 @@ def create_user(userdata: dict):
         steamurl=userdata.get("steamurl"),
         fullavatarurl=userdata.get("fullavatarurl")
     )
-
-    ### Debug
-    print(user.to_dict())
     
     try:
         db.session.add(user)
