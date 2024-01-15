@@ -29,8 +29,8 @@ function SignUpForm() {
     let user = {
       email: email,
       password: password,
-      api_key: apiKey,
-      steam_url: url,
+      apiKey: apiKey,
+      steamURL: url,
     };
     Axios.post('http://localhost:8000/api/auth/register', user)
       .then(function (response) {

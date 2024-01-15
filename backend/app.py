@@ -50,8 +50,8 @@ def manual_register():
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
-        api_key = data.get('apikey')
-        steam_url = data.get('steamurl')
+        api_key = data.get('apiKey')
+        steam_url = data.get('steamURL')
         if not email or not password or not api_key or not steam_url:
             return Response(status=400, response=json.dumps({'error': 'Missing required fields'}))
 
