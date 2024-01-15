@@ -4,6 +4,7 @@ function SignUpForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [url, setURL] = useState();
   const [apiKey, setAPIKey] = useState();
 
   const formHandler = (event) => {
@@ -29,6 +30,7 @@ function SignUpForm() {
       email: email,
       password: password,
       api_key: apiKey,
+      steam_url: url,
     };
     Axios.post('http://localhost:8000/api/auth/register', user)
       .then(function (response) {
@@ -94,10 +96,27 @@ function SignUpForm() {
       </div>
       <div>
         <label
+          htmlFor="steamURL"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Steam URL
+        </label>
+        <input
+          onChange={(event) => setURL(event.target.value)}
+          type="text"
+          name="steamURL"
+          id="steamURL"
+          placeholder="https://steamcommunity.com/id/PlentyJapan"
+          required=""
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <div>
+        <label
           htmlFor="APIKEY"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
-          API KEY
+          API Key
         </label>
         <input
           onChange={(event) => setAPIKey(event.target.value)}

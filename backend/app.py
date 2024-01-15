@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, Response
+from flask_cors import CORS, cross_origin
 from database.db import db
 from database.models import User
 from database.util import create_user
@@ -12,6 +13,8 @@ import json
 load_dotenv()
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
@@ -54,6 +57,8 @@ def manual_register():
 
         hashed_api_key = bcrypt.hashpw(
             api_key.encode('utf-8'), bcrypt.gensalt()).decode()
+        hashed_password = bcrypt.hashpw(
+            password.encode('utf-8'), bcrypt.gensalt()).decode()
 
         id = get_steam_id(steam_url)
         player_summary = get_player_summary(id)["response"]["players"][0]
@@ -65,9 +70,9 @@ def manual_register():
             "steamid": id,
             "email": email,
             "username": player_summary["personaname"],
-            "password": hashed_api_key,
+            "password": hashed_password,
             "logintype": "manual",
-            "apikey": os.getenv('API_KEY'),
+            "apikey": hashed_api_key,
             "steamurl": steam_url,
             "fullavatarurl": player_summary["avatarfull"]
         }
