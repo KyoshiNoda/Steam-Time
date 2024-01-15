@@ -138,7 +138,7 @@ def manual_register():
             password.encode('utf-8'), bcrypt.gensalt()).decode()
 
         id = get_steam_id(steam_url)
-        player_summary = get_player_summary(id)["response"]["players"][0]
+        player_summary = get_player_summary_manual(id)["response"]["players"][0]
 
         if not id or not player_summary:
             return Response(status=400, response=json.dumps({"error": "Steam API failed!"}), content_type='application/json')
@@ -188,7 +188,7 @@ def get_steam_id_api(url):
         return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
 
 
-def get_player_summary(id):
+def get_player_summary_manual(id):
     steam_api_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     params = {
         "key": os.getenv("API_KEY"),
