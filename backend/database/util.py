@@ -12,7 +12,6 @@ def create_user(userdata: dict):
         steamurl=userdata.get("steamurl"),
         fullavatarurl=userdata.get("fullavatarurl")
     )
-    
     try:
         db.session.add(user)
         db.session.commit()
