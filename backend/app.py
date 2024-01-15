@@ -7,7 +7,7 @@ import bcrypt
 import requests
 import json
 import os
-from database.util import create_user
+from database.util import create_user, find_user
 load_dotenv()
 
 app = Flask(__name__)
@@ -59,20 +59,25 @@ def login_process():
         }).json()['response']['players'][0]
     
     apikey = (bcrypt.hashpw(apikey.encode('utf-8'), bcrypt.gensalt())).decode()
-    db_resp = create_user(
-        {
-            "steamid": steamid,
-            "username": response['personaname'],
-            "logintype": "Steam",
-            "apikey": apikey,
-            "steamurl": response['profileurl'],
-            "fullavatarurl": response["avatarfull"]
-        })
-    
-    if db_resp == True:
+    print("HERE" + str(find_user(steamid)))
+    if find_user(steamid):
         return redirect("http://localhost:8000/api/login-success")
     else:
-        return redirect("http://localhost:8000/api/login-failure")
+        print("login bc no entry")
+        db_resp = create_user(
+            {
+                "steamid": steamid,
+                "username": response['personaname'],
+                "logintype": "Steam",
+                "apikey": apikey,
+                "steamurl": response['profileurl'],
+                "fullavatarurl": response["avatarfull"]
+            })
+    
+        if db_resp == True:
+            return redirect("http://localhost:8000/api/login-success")
+        else:
+            return redirect("http://localhost:8000/api/login-failure")
 
 @app.route("/api/createaccount", methods=['POST'])
 def create_account():
