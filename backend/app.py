@@ -1,11 +1,14 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from database.db import db
 from database.models import User
+from database.util import create_user
 from dotenv import load_dotenv
 from pysteamsignin.steamsignin import SteamSignIn
 import requests
 import bcrypt
 import os
+import json
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -20,11 +23,11 @@ def steam_login():
     return login.RedirectUser(login.ConstructURL('http://localhost:8000/api/login'))
 
 
-# @app.route("/api/users")
-# def get_users():
-#     users = User.query.all()
-#     users_list = [user.to_dict() for user in users]
-#     return jsonify(users_list)
+@app.route("/api/users")
+def get_users():
+    users = User.query.all()
+    users_list = [user.to_dict() for user in users]
+    return jsonify(users_list)
 
 
 @app.route("/api/login")
@@ -45,26 +48,76 @@ def manual_register():
         email = data.get('email')
         password = data.get('password')
         api_key = data.get('apikey')
-
-        if not email or not password or not api_key:
-            return jsonify({'error': 'Missing required fields'}), 400
+        steam_url = data.get('steamurl')
+        if not email or not password or not api_key or not steam_url:
+            return Response(status=400, response=json.dumps({'error': 'Missing required fields'}))
 
         hashed_api_key = bcrypt.hashpw(
             api_key.encode('utf-8'), bcrypt.gensalt()).decode()
 
-        response = get_player_summary(api_key, api_key)
-        if response.status_code == 200:
-            return jsonify(response)
+        id = get_steam_id(steam_url)
+        player_summary = get_player_summary(id)["response"]["players"][0]
+
+        if not id or not player_summary:
+            return Response(status=400, response=json.dumps({"error": "Steam API failed!"}), content_type='application/json')
+
+        user = {
+            "steamid": id,
+            "email": email,
+            "username": player_summary["personaname"],
+            "password": hashed_api_key,
+            "logintype": "manual",
+            "apikey": os.getenv('API_KEY'),
+            "steamurl": steam_url,
+            "fullavatarurl": player_summary["avatarfull"]
+        }
+        if create_user(user):
+            return Response(status=200, response=json.dumps({"message": "User created successfully"}), content_type='application/json')
+        else:
+            return Response(status=409, response=json.dumps({"error": "User already exists"}), content_type='application/json')
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
 
 
-# response = get_player_summary()
-# if response.status_code == 200:
-#     # make a user
-#     user.name = response.response.players[0].personaname
-#     user.steamurl = response.response.players[0].profileurl
-#     user.fullavatarurl = response.response.players[0].avatarfull
+def get_steam_id(url):
+    if "/id/" in url:
+        parts = url.split("/id/")
+        if len(parts) >= 2:
+            steamid_response = get_steam_id_api(parts[1][:-1])["response"]
+            if steamid_response["success"] == 1:
+                return steamid_response["steamid"]
+            else:
+                return parts[1][:-1]
+    else:
+        return None
+
+
+def get_steam_id_api(url):
+    steam_api_url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
+    params = {
+        "key": os.getenv('API_KEY'),
+        "vanityurl": url
+    }
+    response = requests.get(url=steam_api_url, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
+
+
+def get_player_summary(id):
+    steam_api_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+    params = {
+        "key": os.getenv("API_KEY"),
+        "steamids": id,
+        "format": "json"
+    }
+    response = requests.get(url=steam_api_url, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
 
 
 @app.route("/api/ownedgames")
@@ -119,19 +172,6 @@ def get_steam_level():
             return 'failure to get steam level games. Error: HTTP {}'.format(response.status_code)
     else:
         return "invalid steamid"
-
-
-def get_player_summary(apikey, steamids):
-    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002"
-    params = {
-        "key": apikey,
-        "steamids": steamids
-    }
-    response = requests.get(url=url, params=params)
-    if response.status_code == 200:
-        return jsonify(response.json())
-    else:
-        return 'Failure to get steam level games. Error: HTTP {}'.format(response.status_code), 500
 
 
 if __name__ == '__main__':
