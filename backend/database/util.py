@@ -19,3 +19,7 @@ def create_user(userdata: dict):
     except Exception as e:
         db.session.rollback()
         return False
+
+def find_user(steamid):
+    user = User.query.filter_by(steamid=steamid).first()
+    return bool(user)
