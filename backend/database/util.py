@@ -1,6 +1,7 @@
 from database.db import db
 from database.models import User
 
+
 def create_user(userdata: dict):
     user = User(
         steamid=userdata.get("steamid"),
@@ -15,11 +16,27 @@ def create_user(userdata: dict):
     try:
         db.session.add(user)
         db.session.commit()
-        return True
+        return user.to_dict()
     except Exception as e:
         db.session.rollback()
-        return False
+        return None
+
 
 def find_user(steamid):
     user = User.query.filter_by(steamid=steamid).first()
-    return bool(user)
+    return user.to_dict() if user else None
+
+
+def update_user(steamid, new_fields):
+    try:
+        user = User.query.filter_by(steamid=steamid).first()
+        if user:
+            for key, value in new_fields.items():
+                setattr(user, key, value)
+            db.session.commit()
+            return True
+        else:
+            return False
+    except Exception as e:
+        db.session.rollback()
+        return False

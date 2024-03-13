@@ -19,7 +19,7 @@ app.secret_key = os.urandom(24)
 
 app.register_blueprint(users_blueprint, url_prefix='/api/users')
 app.register_blueprint(auth_blueprint, url_prefix='/api/auth')
-app.register_blueprint(steam_auth_blueprint, url_prefix='/api/steamAuth')
+app.register_blueprint(steam_auth_blueprint, url_prefix='/api/steam_auth')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
