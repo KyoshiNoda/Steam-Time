@@ -3,16 +3,16 @@ from database.util import create_user
 from steam.api import get_steam_id, get_player_summary
 import bcrypt
 auth_blueprint = Blueprint('auth', __name__)
-
+from database.util import find_user_by_email, verify_password
 
 @auth_blueprint.route("/register", methods=['POST'])
 def manual_register():
     try:
-        data = request.get_json()
-        email = data.get('email')
-        password = data.get('password')
-        api_key = data.get('apiKey')
-        steam_url = data.get('steamURL')
+        email = request.form['email']
+        password = request.form['password']
+        api_key = request.form['apiKey']
+        steam_url = request.form['steamURL']
+
         if not email or not password or not api_key or not steam_url:
             return Response(status=400, response=json.dumps({'error': 'Missing required fields'}))
 
@@ -23,10 +23,10 @@ def manual_register():
 
         id = get_steam_id(steam_url)
         player_summary = get_player_summary(id)["response"]["players"][0]
-
+        
         if not id or not player_summary:
             return Response(status=400, response=json.dumps({"error": "Steam API failed!"}), content_type='application/json')
-
+        
         user = {
             "steamid": id,
             "email": email,
@@ -44,3 +44,23 @@ def manual_register():
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
+
+    
+@auth_blueprint.route("/login", methods=["POST"])
+def manual_login():
+    try:
+        email = request.form['email']
+        password = request.form['password']
+    
+        if find_user_by_email(email):
+            if verify_password(email, password):
+                return Response("Login Successful", status=200, mimetype='application/json')
+            else:
+                return Response("Login Failed", status=401, mimetype='application/json')
+        else:
+            return Response("Login Failed", status=401, mimetype='application/json')
+
+    except Exception as e:
+        return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
+    
+

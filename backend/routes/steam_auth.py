@@ -4,7 +4,6 @@ import json
 from flask import redirect, request, Response, Blueprint
 from pysteamsignin.steamsignin import SteamSignIn
 from database.util import create_user, find_user
-from database.models import User
 
 steam_auth_blueprint = Blueprint('steam_auth', __name__)
 
@@ -51,22 +50,6 @@ def login_process():
             return redirect("http://localhost:8000/api/login-failure")
 
 
-@steam_auth_blueprint.route("/applogin", methods=['POST'])
-def account_login():
-    email = request.form['email']
-    apikey_hash = str(bcrypt.hashpw(
-        request.form['apikey'].encode('utf-8'), bcrypt.gensalt()))
-    user = User.query.filter_by(email=email).first()
-
-    # Database hash isnt the same as input hash. Could be bcrypt.gensalt()^^^
-    # Fixed with encoding and decoding hash strings rather than using str()
-    if bool(user):
-        byte_hash = user.apikey
-        print("Database: " + byte_hash + "\nUser: " + apikey_hash)
-        if byte_hash == apikey_hash:
-            return Response("Login Successful", status=200, mimetype='application/json')
-
-    return Response("Login Failed", status=401, mimetype='application/json')
 
 
 @steam_auth_blueprint.route("/login-success")
