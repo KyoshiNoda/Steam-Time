@@ -6,6 +6,8 @@ import Timer from './pages/Timer';
 import SignIn from './pages/SignIn';
 import Settings from './pages/Settings';
 import SignUp from './pages/SignUp';
+import MainPage from './pages/MainPage';
+import PageFormatter from './components/PageFormatter';
 function App() {
   return (
     <>
@@ -16,6 +18,11 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
+
+        <Route path="/auth" element={<PageFormatter />}>
+          <Route path="main" element={<MainPage />} />
+        </Route>
+
       </Routes>
     </>
   );

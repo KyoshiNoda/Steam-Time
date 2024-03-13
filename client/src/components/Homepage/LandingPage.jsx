@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from './Card';
-function Main() {
+function LandingPage() {
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -13,7 +13,7 @@ function Main() {
             Cultivates a healthy game/break ratio and attempts to prevent the
             user from playing videogames too long <br />
           </div>
-          <a href = '/signup' className='flex flex-col'>
+          <a href="/signup" className="flex flex-col">
             <button className="btn btn-primary text-lg">View More</button>
           </a>
         </div>
@@ -22,4 +22,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default LandingPage;

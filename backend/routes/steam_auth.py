@@ -32,20 +32,12 @@ def login_process():
                     "logintype": "Steam",
                 }
                 created_user = create_user(new_user)
-                response = Response(
-                    response=json.dumps(
-                        {"message": "Login Success", "user": created_user}),
-                    status=302, mimetype="application/json"
-                )
-                response.headers['Location'] = 'http://localhost:3000/auth'
+                response = redirect('http://localhost:3000/auth/main')
+                response.headers['Location'] += f'?message=Login%20Success&user={json.dumps(created_user)}'
                 return response
             else:
-                response = Response(
-                    response=json.dumps(
-                        {"message": "Login Success", "user": user}),
-                    status=302, mimetype="application/json"
-                )
-                response.headers['Location'] = 'http://localhost:3000/auth'
+                response = redirect('http://localhost:3000/auth/main')
+                response.headers['Location'] += f'?message=Login%20Success&user={json.dumps(user)}'
                 return response
         else:
             return Response(
