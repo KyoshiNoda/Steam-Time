@@ -28,16 +28,18 @@ def login_process():
             user = find_user(steam_id)
             if not user:
                 new_user = {
-                    "steamid": steam_id,
-                    "logintype": "Steam",
+                    "steam_id": steam_id,
+                    "login": "steam",
                 }
                 created_user = create_user(new_user)
                 response = redirect('http://localhost:3000/auth/main')
-                response.headers['Location'] += f'?message=Login%20Success&user={json.dumps(created_user)}'
+                response.headers[
+                    'Location'] += f'?message=Login%20Success&user={json.dumps(created_user)}'
                 return response
             else:
                 response = redirect('http://localhost:3000/auth/main')
-                response.headers['Location'] += f'?message=Login%20Success&user={json.dumps(user)}'
+                response.headers[
+                    'Location'] += f'?message=Login%20Success&user={json.dumps(user)}'
                 return response
         else:
             return Response(
@@ -54,7 +56,7 @@ def api_key_check():
     try:
         data = request.values
         api_key = data.get("api_key")
-        steam_id = data.get("steamid")
+        steam_id = data.get("steam_id")
         user = find_user(steam_id)
 
         if not user.api_key:

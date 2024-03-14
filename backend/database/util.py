@@ -4,14 +4,14 @@ from database.models import User
 
 def create_user(userdata: dict):
     user = User(
-        steamid=userdata.get("steamid"),
+        steam_id=userdata.get("steam_id"),
         email=userdata.get("email"),
         username=userdata.get("username"),
         password=userdata.get("password"),
-        logintype=userdata.get("logintype"),
-        apikey=userdata.get("apikey"),
-        steamurl=userdata.get("steamurl"),
-        fullavatarurl=userdata.get("fullavatarurl")
+        login=userdata.get("login"),
+        api_key=userdata.get("api_key"),
+        steam_url=userdata.get("steam_url"),
+        full_avatar_url=userdata.get("full_avatar_url")
     )
     try:
         db.session.add(user)
@@ -19,17 +19,18 @@ def create_user(userdata: dict):
         return user.to_dict()
     except Exception as e:
         db.session.rollback()
+        print(e)
         return None
 
 
-def find_user(steamid):
-    user = User.query.filter_by(steamid=steamid).first()
+def find_user(steam_id):
+    user = User.query.filter_by(steam_id=steam_id).first()
     return user.to_dict() if user else None
 
 
-def update_user(steamid, new_fields):
+def update_user(steam_id, new_fields):
     try:
-        user = User.query.filter_by(steamid=steamid).first()
+        user = User.query.filter_by(steam_id=steam_id).first()
         if user:
             for key, value in new_fields.items():
                 setattr(user, key, value)
