@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Button, Modal } from 'react-daisyui';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { closeAPIKeyModal } from '../../redux/feats/globalSlice/globalSlice';
+import axios from 'axios';
 
 const ApiKeyModal = () => {
   const apiKeyRef = useRef(null);
@@ -9,7 +10,16 @@ const ApiKeyModal = () => {
   const dispatch = useAppDispatch();
 
   const updateAPIKeyHandler = () => {
-    console.log('TEST FOR NOW');
+    axios
+      .post(
+        'http://localhost:8000/api/steam_auth/api-key',
+        apiKeyRef.current.value
+      )
+      .then(() => {
+        // some logic
+      }).catch((error) => {
+        // render error with useState
+      });
   };
 
   return (

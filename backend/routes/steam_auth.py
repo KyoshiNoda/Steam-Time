@@ -50,7 +50,7 @@ def login_process():
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
 
 
-@steam_auth_blueprint.route('/steam-api-key')
+@steam_auth_blueprint.route('/api-key')
 def api_key_check():
     try:
         data = request.values
@@ -79,31 +79,3 @@ def api_key_check():
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
-
-    # print(response)
-    # response = requests.post(
-    #     url="http://localhost:8000/api/steamgetplayersummary",
-    #     data={
-    #         "steamids": steamid,
-    #         "apikey": apikey
-    #     }).json()['response']['players'][0]
-
-    # api_key = (bcrypt.hashpw(api_key.encode(
-    #     'utf-8'), bcrypt.gensalt())).decode()
-    # if find_user(steam_id):
-    #     return redirect("http://localhost:8000/api/login-success")
-    # else:
-    #     print("login bc no entry")
-    #     db_resp = create_user(
-    #         {
-    #             "steamid": steam_id,
-    #             "username": response['personaname'],
-    #             "logintype": "Steam",
-    #             "api_key": api_key,
-    #             "steamurl": response['profileurl'],
-    #             "fullavatarurl": response["avatarfull"]
-    #         })
-    #     if db_resp == True:
-    #         return redirect("http://localhost:8000/api/login-success")
-    #     else:
-    #         return redirect("http://localhost:8000/api/login-failure")
