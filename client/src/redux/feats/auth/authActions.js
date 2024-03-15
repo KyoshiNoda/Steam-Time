@@ -28,11 +28,21 @@ export const registerUser = createAsyncThunk(
 );
 
 export const steamLogin = createAsyncThunk(
-  'api/auth/google',
-  async (code, { rejectWithValue }) => {
+  'api/auth/steamLogin',
+  async ({ rejectWithValue }) => {
     try {
-      const tokens = await Axios.post(`${BASE_URL}/steam_auth`, { code });
-      return tokens;
+      const response = await fetch(
+        `http://localhost:8000/api/steam_auth/steam-login`
+      );
+      const data = await response.json();
+
+      // Handle error response from server
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to log in with Steam');
+      }
+
+      // Return data which includes user and token
+      return data;
     } catch (error) {
       return rejectWithValue(error);
     }

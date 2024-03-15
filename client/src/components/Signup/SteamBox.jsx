@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Stepper from './Stepper';
-import SteamButton from '../SignIn/SteamButton';
+import SteamLogin from '../SignIn/SteamLogin';
 
 function SteamBox() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -18,7 +18,7 @@ function SteamBox() {
     <div className='bg-white rounded p-4 flex flex-col items-center'>
       {currentStep === 1 && (
         <div>
-          <SteamButton />
+          <SteamLogin />
         </div>
       )}
       {currentStep === 2 && (

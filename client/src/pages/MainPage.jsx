@@ -1,27 +1,30 @@
 import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import { updateUserDetails } from '../redux/feats/auth/authSlice';
 const MainPage = () => {
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const message = params.get('message');
     const userString = params.get('user');
 
     if (message && userString) {
-      const user = JSON.parse(userString);
-      console.log(message, user);
+      dispatch(updateUserDetails(JSON.parse(userString)));
     }
   }, []);
+  const user = useAppSelector((state) => state.auth.user);
+
   return (
     <div className="h-screen w-screen flex justify-center items-center">
-      <div className="bg-white rounded-lg p-4 h-1/2 w-1/2">
+      <div className="bg-white rounded-lg p-4 h-1/2 w-1/2 text-black">
         <div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-          voluptatem molestiae dolor quod officia dignissimos ullam sapiente
-          pariatur cupiditate! Tenetur, vel perspiciatis. Hic quidem quam vero
-          placeat consectetur excepturi quas? Dolore similique nihil, nemo
-          molestiae nam accusamus unde dolorum excepturi officia omnis,
-          perspiciatis voluptatibus, officiis placeat exercitationem doloribus
-          totam ex temporibus hic aut vel laboriosam facere culpa! Vel, delectus
-          quasi.
+          <span className="underline ">User ID:</span> {user.user_id}
+        </div>
+        <div>
+          <span className="underline ">Steam ID:</span> {user.steam_id}
+        </div>
+        <div>
+          <span className="underline ">Login Type:</span> {user.login}
         </div>
       </div>
     </div>

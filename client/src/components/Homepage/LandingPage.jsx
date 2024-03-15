@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from './Card';
+import { Link } from 'react-router-dom';
 function LandingPage() {
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -13,9 +14,9 @@ function LandingPage() {
             Cultivates a healthy game/break ratio and attempts to prevent the
             user from playing videogames too long <br />
           </div>
-          <a href="/signup" className="flex flex-col">
+          <Link to="/register" className="flex flex-col">
             <button className="btn btn-primary text-lg">View More</button>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

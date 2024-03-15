@@ -12,9 +12,8 @@ steam_auth_blueprint = Blueprint('steam_auth', __name__)
 
 @steam_auth_blueprint.route("/")
 def steam_login():
-    api_key = request.values.get('api_key')
     login = SteamSignIn()
-    return login.RedirectUser(login.ConstructURL(f"http://localhost:8000/api/steam_auth/steam-login?api_key={api_key}"))
+    return login.RedirectUser(login.ConstructURL(f"http://localhost:8000/api/steam_auth/steam-login"))
 
 
 @steam_auth_blueprint.route("/steam-login")
@@ -57,10 +56,17 @@ def api_key_check():
         data = request.values
         api_key = data.get("api_key")
         steam_id = data.get("steam_id")
+
+        if not steam_id or not api_key:
+            return Response(status=404, response=json.dumps({"message": "Missing ID or KEY"}))
+
         user = find_user(steam_id)
 
+        if not user:
+            return Response(status=404, response=json.dumps({"message": "User not found"}))
+
         if not user.api_key:
-            update_user(steamid=user.steamid, new_fields={"api_key": api_key})
+            update_user(steamid=user.steam_id, new_fields={"api_key": api_key})
         else:
             response = get_player_summary(steam_id, api_key)
             if response == 200:
