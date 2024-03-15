@@ -50,32 +50,30 @@ def login_process():
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
 
 
-@steam_auth_blueprint.route('/api-key')
+@steam_auth_blueprint.route('/new-user', methods=['POST'])
 def api_key_check():
     try:
-        data = request.values
-        api_key = data.get("api_key")
-        steam_id = data.get("steam_id")
+        request_data = request.json
+        api_key = request_data.get('api_key')
+        steam_id = request_data.get('steam_id')
 
         if not steam_id or not api_key:
-            return Response(status=404, response=json.dumps({"message": "Missing ID or KEY"}))
+            return Response(status=404, response=json.dumps({"error": "API KEY missing!"}))
 
-        user = find_user(steam_id)
+        hashed_api_key = bcrypt.hashpw(
+            api_key.encode('utf-8'), bcrypt.gensalt()).decode()
 
-        if not user:
-            return Response(status=404, response=json.dumps({"message": "User not found"}))
-
-        if not user.api_key:
-            update_user(steamid=user.steam_id, new_fields={"api_key": api_key})
+        user = update_user(steam_id, {"api_key": hashed_api_key})
+        response = get_player_summary(steam_id, api_key)
+        if response:
+            data = response['response']['players'][0]
+            user['steam_url'] = data['profileurl']
+            user['full_avatar_url'] = data['avatarfull']
+            user['username'] = data['personaname']
+            updated_user = update_user(steam_id, user)
+            return Response(status=200, response=json.dumps({"message": "Updated User!", "updatedUser": updated_user}), mimetype="application/json")
         else:
-            response = get_player_summary(steam_id, api_key)
-            if response == 200:
-                data = response['response']['players'][0]
-                # fix this below
-                user = update_user(steamid=user.steam_id, new_fields={data})
-                return Response(status=200, response=json.dumps({"message": "Updated User!", "updatedUser": user}), mimetype="application/json")
-            else:
-                return Response(status=400, response=json.dumps({"message": "Bad API Key"}))
+            return Response(status=400, response=json.dumps({"message": "Bad API Key"}))
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))

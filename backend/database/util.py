@@ -35,9 +35,13 @@ def update_user(steam_id, new_fields):
             for key, value in new_fields.items():
                 setattr(user, key, value)
             db.session.commit()
-            return True
+            return user.to_dict()
         else:
-            return False
+            return None
     except Exception as e:
         db.session.rollback()
-        return False
+        return e
+
+def update_user_steam(user,response):
+    user['steam_url'] = response['profileurl']
+    user['full_avatar_url'] = response['avatarfull']

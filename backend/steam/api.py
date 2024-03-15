@@ -14,7 +14,7 @@ def get_player_summary(steam_id, api_key):
     if response.status_code == 200:
         return response.json()
     else:
-        return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
+        return None
 
 
 def get_steam_id(url):

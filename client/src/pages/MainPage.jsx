@@ -39,6 +39,15 @@ const MainPage = () => {
           <div>
             <span className="underline ">Login Type:</span> {user.login}
           </div>
+          <div>
+            <span className="underline ">Steam URL:</span> {user.steam_url}
+          </div>
+          <div>
+            <span className="underline ">Username:</span> {user.username}
+          </div>
+          <div>
+            <span className="underline ">Profile Picture:</span> {user.full_avatar_url}
+          </div>
         </div>
       </div>
       {isApiKeyModalOpen && <ApiKeyModal />}
