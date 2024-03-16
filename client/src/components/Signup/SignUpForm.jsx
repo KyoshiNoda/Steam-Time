@@ -1,48 +1,24 @@
-import React, { useState } from 'react';
-import Axios from 'axios';
-function SignUpForm() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [url, setURL] = useState();
-  const [apiKey, setAPIKey] = useState();
+import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import SteamLogin from '../SignIn/SteamLogin';
+const SignUpForm = () => {
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
+  const steamURLRef = useRef(null);
+  const apiKeyRef = useRef(null);
 
-  const formHandler = (event) => {
-    event.preventDefault();
-    if (
-      email === undefined ||
-      password === undefined ||
-      confirmPassword === undefined ||
-      apiKey === undefined
-    ) {
-      return;
-    }
-    if (password.length < 10) {
-      console.log('password not long enough');
-      return;
-    }
-    if (password !== confirmPassword) {
-      console.log('password does not match');
-      return;
-    }
-
-    let user = {
-      email: email,
-      password: password,
-      apiKey: apiKey,
-      steamURL: url,
-    };
-    Axios.post('http://localhost:8000/api/auth/register', user)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  const registerAccount = () => {
+    console.log(
+      emailRef.current.value,
+      passwordRef.current.value,
+      confirmPasswordRef.current.value,
+      steamURLRef.current.value,
+      apiKeyRef.current.value
+    );
   };
-
   return (
-    <form className="space-y-4 md:space-y-6" action="#">
+    <div className="space-y-4 md:space-y-6 p-4">
       <div>
         <label
           htmlFor="email"
@@ -51,8 +27,8 @@ function SignUpForm() {
           Your email
         </label>
         <input
+          ref={emailRef}
           type="email"
-          onChange={(event) => setEmail(event.target.value)}
           name="email"
           id="email"
           required=""
@@ -69,7 +45,7 @@ function SignUpForm() {
         </label>
         <input
           type="password"
-          onChange={(event) => setPassword(event.target.value)}
+          ref={passwordRef}
           name="password"
           id="password"
           placeholder="••••••••"
@@ -85,7 +61,7 @@ function SignUpForm() {
           Confirm password
         </label>
         <input
-          onChange={(event) => setConfirmPassword(event.target.value)}
+          ref={confirmPasswordRef}
           type="password"
           name="confirm-password"
           id="confirm-password"
@@ -102,7 +78,7 @@ function SignUpForm() {
           Steam URL
         </label>
         <input
-          onChange={(event) => setURL(event.target.value)}
+          ref={steamURLRef}
           type="text"
           name="steamURL"
           id="steamURL"
@@ -119,7 +95,7 @@ function SignUpForm() {
           API Key
         </label>
         <input
-          onChange={(event) => setAPIKey(event.target.value)}
+          ref={apiKeyRef}
           type="password"
           name="apiKEY"
           id="apiKEY"
@@ -130,22 +106,23 @@ function SignUpForm() {
       </div>
       <button
         type="submit"
-        onClick={formHandler}
+        onClick={registerAccount}
         className="btn btn-success w-full"
       >
         Submit
       </button>
+      <SteamLogin />
       <p className="text-sm font-lighttext-gray-500 dark:text-gray-400">
         Already have an account? {}
-        <a
-          href="/SignIn"
+        <Link
+          to="/login"
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"
         >
           Login here
-        </a>
+        </Link>
       </p>
-    </form>
+    </div>
   );
-}
+};
 
 export default SignUpForm;

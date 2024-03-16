@@ -4,7 +4,6 @@ from steam.api import get_steam_id, get_player_summary
 import bcrypt
 auth_blueprint = Blueprint('auth', __name__)
 
-
 @auth_blueprint.route("/register", methods=['POST'])
 def manual_register():
     try:

@@ -2,18 +2,20 @@ import requests
 import os
 from flask import request
 
-def get_player_summary(id):
+
+def get_player_summary(steam_id, api_key):
     steam_api_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     params = {
-        "key": os.getenv("API_KEY"),
-        "steamids": id,
+        "key": api_key,
+        "steamids": steam_id,
         "format": "json"
     }
     response = requests.get(url=steam_api_url, params=params)
     if response.status_code == 200:
         return response.json()
     else:
-        return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
+        return None
+
 
 def get_steam_id(url):
     if "/id/" in url:
@@ -27,6 +29,7 @@ def get_steam_id(url):
     else:
         return None
 
+
 def get_steam_id_api(url):
     steam_api_url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
     params = {
@@ -38,6 +41,7 @@ def get_steam_id_api(url):
         return response.json()
     else:
         return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
+
 
 def get_owned_games():
     url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
@@ -55,6 +59,7 @@ def get_owned_games():
     else:
         return 'invalid steamid'
 
+
 def get_recently_played_games():
     url = "https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1"
     data = request.values
@@ -70,6 +75,7 @@ def get_recently_played_games():
             return 'failure to get recently played games. Error: HTTP {}'.format(response.status_code)
     else:
         return "invalid steamid"
+
 
 def get_steam_level():
     url = "https://api.steampowered.com/IPlayerService/GetSteamLevel/v1"
