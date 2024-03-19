@@ -3,7 +3,7 @@ from database.util import create_user
 from steam.api import get_steam_id, get_player_summary
 import bcrypt
 auth_blueprint = Blueprint('auth', __name__)
-from database.util import find_user_by_email, verify_password
+from database.util import *
 
 @auth_blueprint.route("/register", methods=['POST'])
 def manual_register():
@@ -21,21 +21,21 @@ def manual_register():
         hashed_password = bcrypt.hashpw(
             password.encode('utf-8'), bcrypt.gensalt()).decode()
 
-        id = get_steam_id(steam_url)
-        player_summary = get_player_summary(id)["response"]["players"][0]
+        steam_id = get_steam_id(steam_url)
+        player_summary = get_player_summary(steam_id)["response"]["players"][0]
         
         if not id or not player_summary:
             return Response(status=400, response=json.dumps({"error": "Steam API failed!"}), content_type='application/json')
         
         user = {
-            "steamid": id,
+            "steam_id": steam_id,
             "email": email,
             "username": player_summary["personaname"],
             "password": hashed_password,
-            "logintype": "manual",
-            "apikey": hashed_api_key,
-            "steamurl": steam_url,
-            "fullavatarurl": player_summary["avatarfull"]
+            "login": "manual",
+            "api_key": hashed_api_key,
+            "steam_url": steam_url,
+            "full_avatar_url": player_summary["avatarfull"]
         }
         if create_user(user):
             return Response(status=200, response=json.dumps({"message": "User created successfully"}), content_type='application/json')
@@ -51,14 +51,10 @@ def manual_login():
     try:
         email = request.form['email']
         password = request.form['password']
-    
-        if find_user_by_email(email):
-            if verify_password(email, password):
-                return Response("Login Successful", status=200, mimetype='application/json')
-            else:
-                return Response("Login Failed", status=401, mimetype='application/json')
-        else:
-            return Response("Login Failed", status=401, mimetype='application/json')
+
+        if find_user_by_email(email) and verify_password(email, password):
+            return Response("Login Successful", status=200, mimetype='application/json')
+        return Response("Login Failed", status=401, mimetype='application/json')
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))

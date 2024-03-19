@@ -4,22 +4,23 @@ import bcrypt
 
 def create_user(userdata: dict):
     user = User(
-        steamid=userdata.get("steamid"),
+        steam_id=userdata.get("steam_id"),
         email=userdata.get("email"),
         username=userdata.get("username"),
         password=userdata.get("password"),
-        logintype=userdata.get("logintype"),
-        apikey=userdata.get("apikey"),
-        steamurl=userdata.get("steamurl"),
-        fullavatarurl=userdata.get("fullavatarurl")
+        login=userdata.get("login"),
+        api_key=userdata.get("api_key"),
+        steam_url=userdata.get("steam_url"),
+        full_avatar_url=userdata.get("full_avatar_url")
     )
     try:
         db.session.add(user)
         db.session.commit()
-        return True
+        return user.to_dict()
     except Exception as e:
         db.session.rollback()
-        return False
+        print(e)
+        return e
     
 def update_user(email, userdata: dict):
     try:

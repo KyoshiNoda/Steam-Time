@@ -13,11 +13,6 @@ def get_users():
 
 @users_blueprint.route("change-information", methods=["PATCH"])
 def change_user_information():
-    """
-    email: str
-    password: str
-    steamurl: str
-    """
     changes = {
         "email": request.form['email'],
         "apikey": bcrypt.hashpw(
@@ -32,10 +27,6 @@ def change_user_information():
     
 @users_blueprint.route("change-password", methods=["PATCH"])
 def change_user_password():
-    """
-    email: str
-    password: str
-    """
     changes = {
         "password": bcrypt.hashpw(
             request.form['password'].encode('utf-8'), bcrypt.gensalt()).decode()
