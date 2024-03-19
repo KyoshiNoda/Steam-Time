@@ -2,6 +2,7 @@ from database.db import db
 from database.models import User
 import bcrypt
 
+
 def create_user(userdata: dict):
     user = User(
         steam_id=userdata.get("steam_id"),
@@ -20,26 +21,25 @@ def create_user(userdata: dict):
     except Exception as e:
         db.session.rollback()
         print(e)
-        return e
-    
-def update_user(email, userdata: dict):
+
+def find_user(steam_id):
+    user = User.query.filter_by(steam_id=steam_id).first()
+    return user.to_dict() if user else None
+
+def update_user(steam_id, new_fields):
     try:
-        # with db.session.begin(subtransactions=True):
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(steam_id=steam_id).first()
         if user:
-            for key, value in userdata.items():
+            for key, value in new_fields.items():
                 setattr(user, key, value)
-        db.session.commit()
-        return True
+            db.session.commit()
+            return user.to_dict()
+        else:
+            return None
     except Exception as e:
         db.session.rollback()
-        print(e)
-        return False 
-
-def find_user(steamid):
-    user = User.query.filter_by(steamid=steamid).first()
-    return bool(user)
-
+        return e
+      
 def find_user_by_email(email):
     user = User.query.filter_by(email=email).first()
     return bool(user)
@@ -47,4 +47,3 @@ def find_user_by_email(email):
 def verify_password(email, password):
     user = User.query.filter_by(email=email).first()
     return bcrypt.checkpw(password.encode(), user.password.encode())
-    

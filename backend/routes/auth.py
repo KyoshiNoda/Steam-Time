@@ -1,5 +1,4 @@
 from flask import Blueprint, json, Response, request
-from database.util import create_user
 from steam.api import get_steam_id, get_player_summary
 import bcrypt
 auth_blueprint = Blueprint('auth', __name__)

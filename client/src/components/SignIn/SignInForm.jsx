@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SignInModal from './SignInModal';
-import SteamButton from './SteamButton';
+import { Link } from 'react-router-dom';
+import SteamLogin from './SteamLogin';
 function SignInForm() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -37,22 +38,22 @@ function SignInForm() {
             placeholder="password"
             className="input input-bordered"
           />
-          <div className='flex'>
+          <div className="flex">
             <label className="label">
               <SignInModal />
             </label>
-            <label className="label justify-end">
-              <a href="/Signup" className="label-text-alt link link-hover">
+            <Link to={'/register'}>
+              <label className="label justify-end text-sm cursor-pointer">
                 Don't have any account?
-              </a>
-            </label>
+              </label>
+            </Link>
           </div>
         </div>
         <div className="form-control mt-2">
           <button className="btn btn-primary">Login</button>
         </div>
         <div className="form-control">
-          <SteamButton />
+          <SteamLogin />
         </div>
       </div>
     </div>
