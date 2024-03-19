@@ -1,5 +1,6 @@
 from database.db import db
 from database.models import User
+import bcrypt
 
 
 def create_user(userdata: dict):
@@ -20,13 +21,10 @@ def create_user(userdata: dict):
     except Exception as e:
         db.session.rollback()
         print(e)
-        return None
-
 
 def find_user(steam_id):
     user = User.query.filter_by(steam_id=steam_id).first()
     return user.to_dict() if user else None
-
 
 def update_user(steam_id, new_fields):
     try:
@@ -41,7 +39,11 @@ def update_user(steam_id, new_fields):
     except Exception as e:
         db.session.rollback()
         return e
+      
+def find_user_by_email(email):
+    user = User.query.filter_by(email=email).first()
+    return bool(user)
 
-def update_user_steam(user,response):
-    user['steam_url'] = response['profileurl']
-    user['full_avatar_url'] = response['avatarfull']
+def verify_password(email, password):
+    user = User.query.filter_by(email=email).first()
+    return bcrypt.checkpw(password.encode(), user.password.encode())

@@ -9,12 +9,10 @@ from database.models import User
 
 steam_auth_blueprint = Blueprint('steam_auth', __name__)
 
-
 @steam_auth_blueprint.route("/")
 def steam_login():
     login = SteamSignIn()
     return login.RedirectUser(login.ConstructURL(f"http://localhost:8000/api/steam_auth/steam-login"))
-
 
 @steam_auth_blueprint.route("/steam-login")
 def login_process():
@@ -48,7 +46,6 @@ def login_process():
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
-
 
 @steam_auth_blueprint.route('/new-user', methods=['POST'])
 def api_key_check():
