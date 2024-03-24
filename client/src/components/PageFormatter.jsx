@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 const PageFormatter = () => {
   const { user } = useAppSelector((state) => state.auth);
-  if (user == null) {
+  if (user == null || JSON.stringify(user) === '{}') {
     return (
       <div>
         <h1>Unauthorized</h1>

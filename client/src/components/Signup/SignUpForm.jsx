@@ -1,6 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SteamLogin from '../SignIn/SteamLogin';
+import { useAppDispatch } from '../../redux/store';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../redux/feats/auth/authActions';
 const SignUpForm = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -8,14 +11,24 @@ const SignUpForm = () => {
   const steamURLRef = useRef(null);
   const apiKeyRef = useRef(null);
 
-  const registerAccount = () => {
-    console.log(
-      emailRef.current.value,
-      passwordRef.current.value,
-      confirmPasswordRef.current.value,
-      steamURLRef.current.value,
-      apiKeyRef.current.value
-    );
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const registerAccount = async () => {
+    try {
+      await dispatch(
+        registerUser({
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+          steamURL: steamURLRef.current.value,
+          apiKey: apiKeyRef.current.value,
+        })).unwrap();
+        navigate('auth/main');
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="space-y-4 md:space-y-6 p-4">
