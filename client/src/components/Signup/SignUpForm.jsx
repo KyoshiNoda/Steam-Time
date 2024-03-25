@@ -14,8 +14,11 @@ const SignUpForm = () => {
   const [isMissing, setIsMissing] = useState(false);
   const [missingMessage, setMissingMessage] = useState('');
 
-  const [invalidCred, setInvalidCred] = useState(false);
-  const [credMessage, setCredMessage] = useState('');
+  const [invalidAPIKey, setInvalidAPIKey] = useState(false);
+  const [keyMessage, setKeyMessage] = useState('');
+
+  const [invalidURL, setInvalidURL] = useState(false);
+  const [urlMessage, setUrlMessage] = useState('');
 
   const [isFound, setIsFound] = useState(false);
   const [foundMessage, setFoundMessage] = useState('');
@@ -52,8 +55,14 @@ const SignUpForm = () => {
         setIsFound(true);
         setFoundMessage(errorMessage);
       } else if (res.status === 404) {
-        setInvalidCred(true);
-        setCredMessage(errorMessage);
+        let error = res.data.error;
+        if (error.includes('API KEY')) {
+          setInvalidAPIKey(true);
+          setKeyMessage(error);
+        } else {
+          setInvalidURL(true);
+          setUrlMessage(error);
+        }
       } else {
         console.log(error);
       }
@@ -161,7 +170,7 @@ const SignUpForm = () => {
           required=""
           className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
           ${
-            invalidCred || isMissing
+            invalidURL || isMissing
               ? 'border-red-500 dark:border-red-700'
               : 'border-gray-300 dark:border-gray-600'
           }`}
@@ -169,8 +178,8 @@ const SignUpForm = () => {
         {isMissing && (
           <span className="text-xs text-red-500">{missingMessage}</span>
         )}
-        {invalidCred && (
-          <span className="text-xs text-red-500">{credMessage}</span>
+        {invalidURL && (
+          <span className="text-xs text-red-500">{urlMessage}</span>
         )}
       </div>
       <div>
@@ -187,9 +196,9 @@ const SignUpForm = () => {
           id="apiKEY"
           placeholder="••••••••••••••"
           required=""
-          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
           ${
-            invalidCred || isMissing
+            invalidAPIKey || isMissing
               ? 'border-red-500 dark:border-red-700'
               : 'border-gray-300 dark:border-gray-600'
           }`}
@@ -197,8 +206,8 @@ const SignUpForm = () => {
         {isMissing && (
           <span className="text-xs text-red-500">{missingMessage}</span>
         )}
-        {invalidCred && (
-          <span className="text-xs text-red-500">{credMessage}</span>
+        {invalidAPIKey && (
+          <span className="text-xs text-red-500">{keyMessage}</span>
         )}
       </div>
       <button

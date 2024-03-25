@@ -19,16 +19,14 @@ def manual_register():
             return Response(status=400, response=json.dumps({'error': 'Missing required fields'}))
 
         if find_user_by_email(email):
-            return Response(status=403, response=json.dumps({'error': 'User exists!'}))
+            return Response(status=403, response=json.dumps({'error': 'User already exists!'}))
 
         steam_id = get_steam_id(steam_url, api_key)
-        response = get_player_summary(steam_id, api_key)[
-            "response"]["players"][0]
-
-        if not steam_id:
-            return Response(status=404, response=json.dumps({"error": "API KEY is invalid!"}), content_type='application/json')
-        if not response:
-            return Response(status=404, response=json.dumps({"error": "API key is invalid@ "}), content_type='application/json')
+        if "error" in steam_id:
+            print(steam_id)
+            return Response(status=404, response=json.dumps({"error": steam_id["error"]}), content_type='application/json')
+        
+        response = get_player_summary(steam_id, api_key)["response"]["players"][0]
         hashed_api_key = bcrypt.hashpw(
             api_key.encode('utf-8'), bcrypt.gensalt()).decode()
         hashed_password = bcrypt.hashpw(
