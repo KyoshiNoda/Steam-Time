@@ -14,22 +14,25 @@ def manual_register():
         password = request_data.get('password')
         api_key = request_data.get('apiKey')
         steam_url = request_data.get('steamURL')
+
         if not email or not password or not api_key or not steam_url:
             return Response(status=400, response=json.dumps({'error': 'Missing required fields'}))
 
-        steam_id = get_steam_id(steam_url, api_key)
+        if find_user_by_email(email):
+            return Response(status=403, response=json.dumps({'error': 'User exists!'}))
 
+        steam_id = get_steam_id(steam_url, api_key)
+        response = get_player_summary(steam_id, api_key)[
+            "response"]["players"][0]
+
+        if not steam_id:
+            return Response(status=404, response=json.dumps({"error": "API KEY is invalid!"}), content_type='application/json')
+        if not response:
+            return Response(status=404, response=json.dumps({"error": "API key is invalid@ "}), content_type='application/json')
         hashed_api_key = bcrypt.hashpw(
             api_key.encode('utf-8'), bcrypt.gensalt()).decode()
         hashed_password = bcrypt.hashpw(
             password.encode('utf-8'), bcrypt.gensalt()).decode()
-
-        response = get_player_summary(steam_id, api_key)[
-            "response"]["players"][0]
-
-        if not steam_id or not response:
-            return Response(status=400, response=json.dumps({"error": "Steam API failed!"}), content_type='application/json')
-
         user = {
             "steam_id": steam_id,
             "email": email,
@@ -42,18 +45,19 @@ def manual_register():
         }
         if create_user(user):
             payload = {'user_id': user['steam_id']}
-            token = jwt.encode(payload, os.getenv('JWT_KEY'), algorithm='HS256').decode('utf-8')
+            token = jwt.encode(payload, os.getenv(
+                'JWT_KEY'), algorithm='HS256')
             return Response(status=200, response=json.dumps({
                                                             "message": "User created successfully",
                                                             "user": user,
                                                             "token": token
                                                             }), content_type='application/json')
+        # swap logic
         else:
             return Response(status=409, response=json.dumps({"error": "User already exists"}), content_type='application/json')
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
-
 
 
 @auth_blueprint.route("/login", methods=["POST"])

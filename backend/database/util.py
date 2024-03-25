@@ -42,7 +42,7 @@ def update_user(steam_id, new_fields):
       
 def find_user_by_email(email):
     user = User.query.filter_by(email=email).first()
-    return bool(user)
+    return user.to_dict() if user else None
 
 def verify_password(email, password):
     user = User.query.filter_by(email=email).first()
