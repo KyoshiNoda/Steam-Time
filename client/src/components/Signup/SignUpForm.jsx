@@ -5,12 +5,14 @@ import { useAppDispatch } from '../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../redux/feats/auth/authActions';
 const SignUpForm = () => {
+  // Input states
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
   const steamURLRef = useRef(null);
   const apiKeyRef = useRef(null);
 
+  // Error states
   const [isMissing, setIsMissing] = useState(false);
   const [missingMessage, setMissingMessage] = useState('');
 

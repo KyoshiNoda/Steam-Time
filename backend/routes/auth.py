@@ -25,8 +25,9 @@ def manual_register():
         if "error" in steam_id:
             print(steam_id)
             return Response(status=404, response=json.dumps({"error": steam_id["error"]}), content_type='application/json')
-        
-        response = get_player_summary(steam_id, api_key)["response"]["players"][0]
+
+        response = get_player_summary(steam_id, api_key)[
+            "response"]["players"][0]
         hashed_api_key = bcrypt.hashpw(
             api_key.encode('utf-8'), bcrypt.gensalt()).decode()
         hashed_password = bcrypt.hashpw(
@@ -50,10 +51,6 @@ def manual_register():
                                                             "user": user,
                                                             "token": token
                                                             }), content_type='application/json')
-        # swap logic
-        else:
-            return Response(status=409, response=json.dumps({"error": "User already exists"}), content_type='application/json')
-
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
 
@@ -61,12 +58,27 @@ def manual_register():
 @auth_blueprint.route("/login", methods=["POST"])
 def manual_login():
     try:
-        email = request.form['email']
-        password = request.form['password']
+        request_data = request.json
+        email = request_data.get('email')
+        password = request_data.get('password')
+        
+        if not email or not password:
+            return Response(status=400,  response=json.dumps({"error": "Missing Fields"}), content_type='application/json')
 
-        if find_user_by_email(email) and verify_password(email, password):
-            return Response("Login Successful", status=200, mimetype='application/json')
-        return Response("Login Failed", status=401, mimetype='application/json')
+        user = find_user_by_email(email)
+
+        if not user:
+            return Response(status=401,  response=json.dumps({"error": "User not Found"}), content_type='application/json')
+        if not verify_password(email, password):
+            return Response(status=401,  response=json.dumps({"error": "Incorrect Password"}), content_type='application/json')
+        payload = {'user_id': user['steam_id']}
+        token = jwt.encode(payload, os.getenv(
+            'JWT_KEY'), algorithm='HS256')
+        return Response(status=200, response=json.dumps({
+                                                        "message": "Login successfully",
+                                                        "user": user,
+                                                        "token": token
+                                                        }), content_type='application/json')
 
     except Exception as e:
         return Response(status=500, response=json.dumps({"error": "Internal server error", "details": str(e)}))
