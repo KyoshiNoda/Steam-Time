@@ -1,21 +1,74 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SteamLogin from '../SignIn/SteamLogin';
+import { useAppDispatch } from '../../redux/store';
+import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../redux/feats/auth/authActions';
 const SignUpForm = () => {
+  // Input states
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
   const steamURLRef = useRef(null);
   const apiKeyRef = useRef(null);
 
-  const registerAccount = () => {
-    console.log(
-      emailRef.current.value,
-      passwordRef.current.value,
-      confirmPasswordRef.current.value,
-      steamURLRef.current.value,
-      apiKeyRef.current.value
-    );
+  // Error states
+  const [isMissing, setIsMissing] = useState(false);
+  const [missingMessage, setMissingMessage] = useState('');
+
+  const [invalidAPIKey, setInvalidAPIKey] = useState(false);
+  const [keyMessage, setKeyMessage] = useState('');
+
+  const [invalidURL, setInvalidURL] = useState(false);
+  const [urlMessage, setUrlMessage] = useState('');
+
+  const [isFound, setIsFound] = useState(false);
+  const [foundMessage, setFoundMessage] = useState('');
+
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const registerAccount = async () => {
+    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+      setPasswordError(true);
+      setPasswordErrorMessage('Password do not match');
+      return;
+    }
+    try {
+      await dispatch(
+        registerUser({
+          email: emailRef.current.value,
+          password: passwordRef.current.value,
+          steamURL: steamURLRef.current.value,
+          apiKey: apiKeyRef.current.value,
+        })
+      ).unwrap();
+      navigate('/auth/main');
+    } catch (error) {
+      const res = error.response;
+      const errorMessage = res.data.error;
+      if (res.status === 400) {
+        setIsMissing(true);
+        setMissingMessage(errorMessage);
+      } else if (res.status === 403) {
+        setIsFound(true);
+        setFoundMessage(errorMessage);
+      } else if (res.status === 404) {
+        let error = res.data.error;
+        if (error.includes('API KEY')) {
+          setInvalidAPIKey(true);
+          setKeyMessage(error);
+        } else {
+          setInvalidURL(true);
+          setUrlMessage(error);
+        }
+      } else {
+        console.log(error);
+      }
+    }
   };
   return (
     <div className="space-y-4 md:space-y-6 p-4">
@@ -32,9 +85,20 @@ const SignUpForm = () => {
           name="email"
           id="email"
           required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="name@company.com"
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          ${
+            isFound || isMissing
+              ? 'border-red-500 dark:border-red-700'
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
+        {isMissing && (
+          <span className="text-xs text-red-500">{missingMessage}</span>
+        )}
+        {isFound && (
+          <span className="text-xs text-red-500">{foundMessage}</span>
+        )}
       </div>
       <div>
         <label
@@ -50,8 +114,19 @@ const SignUpForm = () => {
           id="password"
           placeholder="••••••••"
           required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          ${
+            passwordError || isMissing
+              ? 'border-red-500 dark:border-red-700'
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
+        {isMissing && (
+          <span className="text-xs text-red-500">{missingMessage}</span>
+        )}
+        {passwordError && (
+          <span className="text-xs text-red-500">{passwordErrorMessage}</span>
+        )}
       </div>
       <div>
         <label
@@ -67,8 +142,19 @@ const SignUpForm = () => {
           id="confirm-password"
           placeholder="••••••••"
           required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          ${
+            passwordError || isMissing
+              ? 'border-red-500 dark:border-red-700'
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
+        {isMissing && (
+          <span className="text-xs text-red-500">{missingMessage}</span>
+        )}
+        {passwordError && (
+          <span className="text-xs text-red-500">{passwordErrorMessage}</span>
+        )}
       </div>
       <div>
         <label
@@ -84,8 +170,19 @@ const SignUpForm = () => {
           id="steamURL"
           placeholder="https://steamcommunity.com/id/PlentyJapan"
           required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          ${
+            invalidURL || isMissing
+              ? 'border-red-500 dark:border-red-700'
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
+        {isMissing && (
+          <span className="text-xs text-red-500">{missingMessage}</span>
+        )}
+        {invalidURL && (
+          <span className="text-xs text-red-500">{urlMessage}</span>
+        )}
       </div>
       <div>
         <label
@@ -101,8 +198,19 @@ const SignUpForm = () => {
           id="apiKEY"
           placeholder="••••••••••••••"
           required=""
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={`bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+          ${
+            invalidAPIKey || isMissing
+              ? 'border-red-500 dark:border-red-700'
+              : 'border-gray-300 dark:border-gray-600'
+          }`}
         />
+        {isMissing && (
+          <span className="text-xs text-red-500">{missingMessage}</span>
+        )}
+        {invalidAPIKey && (
+          <span className="text-xs text-red-500">{keyMessage}</span>
+        )}
       </div>
       <button
         type="submit"

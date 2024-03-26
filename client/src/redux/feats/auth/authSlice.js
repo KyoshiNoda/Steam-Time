@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser, steamLogin } from './authActions';
+import { loginUser, registerUser } from './authActions';
 
-const userFromStorage = localStorage.getItem('steam');
-const tokenFromStorage = localStorage.getItem('token');
+const userFromStorage = localStorage.getItem('steam_user');
+const tokenFromStorage = localStorage.getItem('steam_token');
 
 const initialState = {
   user: userFromStorage ? JSON.parse(userFromStorage) : {},
@@ -20,8 +20,8 @@ const authSlice = createSlice({
       state.token = '';
       state.loading = false;
       state.error = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('steam_token');
+      localStorage.removeItem('steam_user');
     },
     updateUserDetails: (state, action) => {
       state.user = action.payload;
@@ -37,8 +37,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = payload.data.user;
         state.token = payload.data.token;
-        localStorage.setItem('user', JSON.stringify(payload.data.user));
-        localStorage.setItem('token', payload.data.token);
+        localStorage.setItem('steam_user', JSON.stringify(payload.data.user));
+        localStorage.setItem('steam_token', payload.data.token);
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.loading = false;
@@ -51,8 +51,8 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.user = payload.data.user;
-        localStorage.setItem('user', JSON.stringify(payload.data.user));
-        localStorage.setItem('token', payload.data.token);
+        localStorage.setItem('steam_user', JSON.stringify(payload.data.user));
+        localStorage.setItem('steam_token', payload.data.token);
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.loading = false;

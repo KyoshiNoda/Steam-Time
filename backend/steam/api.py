@@ -17,30 +17,39 @@ def get_player_summary(steam_id, api_key):
         return None
 
 
-def get_steam_id(url):
+def get_steam_id(url, api_key):
     if "/id/" in url:
         parts = url.split("/id/")
         if len(parts) >= 2:
-            steamid_response = get_steam_id_api(parts[1][:-1])["response"]
-            if steamid_response["success"] == 1:
+            vanity_url = parts[1][:-1]
+            steamid_response = get_steam_id_api(
+                vanity_url, api_key)['response']
+            if "success" in steamid_response:
                 return steamid_response["steamid"]
             else:
-                return parts[1][:-1]
+                return steamid_response
+    elif "/profiles/":
+        parts = url.split("/profiles/")
+        return parts[1]
     else:
         return None
 
 
-def get_steam_id_api(url):
+def get_steam_id_api(url, api_key):
     steam_api_url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
     params = {
-        "key": os.getenv('API_KEY'),
+        "key": api_key,
         "vanityurl": url
     }
     response = requests.get(url=steam_api_url, params=params)
     if response.status_code == 200:
-        return response.json()
+        json_response = response.json()
+        if json_response.get("response", {}).get("message") != "No match":
+            return json_response
+        else:
+            return {'response': {'error': 'Incorrect Steam URL.'}}
     else:
-        return 'Failure to get steam id. Error: HTTP {}, {}'.format(response.status_code)
+        return {'response': {'error': 'Incorrect API KEY.'}}
 
 
 def get_owned_games():
